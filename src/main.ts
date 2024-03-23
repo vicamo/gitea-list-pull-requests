@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
-import { wait } from './wait'
+import * as ih from './input-helper'
+import * as gitea from 'gitea-js'
 
 /**
  * The main function for the action.
@@ -7,19 +8,19 @@ import { wait } from './wait'
  */
 export async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-
-    // Debug logs are only output if the `ACTIONS_STEP_DEBUG` secret is true
-    core.debug(`Waiting ${ms} milliseconds ...`)
-
-    // Log the current timestamp, wait, then log the new timestamp
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const inputSettings = await ih.getInputSettings()
+    const api = gitea.giteaApi(`${inputSettings.serverUrl}`, {
+      token: inputSettings.token
+    })
+    const resp = await api.repos.repoListPullRequests(
+      `${inputSettings.repositoryOwner}`,
+      `${inputSettings.repositoryName}`
+    )
 
     // Set outputs for other workflow steps to use
-    core.setOutput('time', new Date().toTimeString())
+    core.setOutput('json', JSON.stringify(resp.data))
   } catch (error) {
+    core.error('Failed to fetch pull requests')
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
   }
