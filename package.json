@@ -1,21 +1,21 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
+  "name": "gitea-list-pull-requests",
+  "description": "Gitea action that lists pull requests with filtering conditions.",
   "version": "0.0.0",
-  "author": "",
+  "author": "You-Sheng Yang <vicamo@gmail.com>",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://gitea.com/vicamo/gitea-list-pull-requests",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://gitea.com/vicamo/gitea-list-pull-requests.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://gitea.com/vicamo/gitea-list-pull-requests/issues"
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "gitea",
+    "pull-requests"
   ],
   "exports": {
     ".": "./dist/index.js"

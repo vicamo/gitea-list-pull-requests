@@ -1,11 +1,9 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-
-# Add your action's branding here. This will appear on the GitHub Marketplace.
+name: 'Gitea List Pull Requests'
+description: 'Gitea Action that lists pull requests with filtering conditions'
+author: 'You-Sheng Yang'
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'list'
+  color: 'blue'
 
 # Define your inputs here.
 inputs:
