@@ -1,23 +1,33 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
-
-# Add your action's branding here. This will appear on the GitHub Marketplace.
+name: 'Gitea List Pull Requests'
+description: 'Gitea Action that lists pull requests with filtering conditions'
+author: 'You-Sheng Yang'
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'list'
+  color: 'blue'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
-    required: true
-    default: '1000'
+  repository:
+    description: 'Repository name with owner. For example, actions/checkout'
+    default: ${{ github.repository }}
+  token:
+    description: >
+      Access Token used to retrieve pull requests from the specified the
+      repository.
 
-# Define your outputs here.
+      [Learn more about generating and using access
+      tokens.](https://docs.gitea.com/development/api-usage)
+    default: ${{ github.token }}
+  server_url:
+    description: >
+      The server URL for the Gitea instance that you are trying to enumerate
+      pull requests from, will use environment defaults from the same instance
+      that the workflow is running from unless specified. Example URL is
+      https://gitea.com.
+    default: ${{ github.server_url }}
+
 outputs:
-  time:
-    description: 'Your output description here'
+  json:
+    description: Array of pull requests object in JSON format.
 
 runs:
   using: node20
