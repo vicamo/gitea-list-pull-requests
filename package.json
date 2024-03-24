@@ -1,21 +1,20 @@
 {
-  "name": "typescript-action",
-  "description": "GitHub Actions TypeScript template",
+  "name": "gitea-actions-template",
+  "description": "Gitea Actions template",
   "version": "0.0.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/actions/typescript-action",
+  "homepage": "https://gitea.com/vicamo/gitea-actions-template",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://gitea.com/vicamo/gitea-actions-template.git"
   },
   "bugs": {
-    "url": "https://github.com/actions/typescript-action/issues"
+    "url": "https://gitea.com/vicamo/gitea-actions-template/issues"
   },
   "keywords": [
     "actions",
-    "node",
-    "setup"
+    "gitea"
   ],
   "exports": {
     ".": "./dist/index.js"
