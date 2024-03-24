@@ -1,8 +1,8 @@
 # Create a GitHub Action Using TypeScript
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
+[![GitHub Super-Linter](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/linter.yml)](https://github.com/super-linter/super-linter)
+![CI](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/ci.yml)
+[![Check dist/](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/check-dist.yml)](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/check-dist.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 Use this template to bootstrap the creation of a TypeScript action. :rocket:
