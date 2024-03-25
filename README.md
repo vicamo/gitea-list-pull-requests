@@ -21,6 +21,24 @@
 
 <!-- end usage -->
 
+## Customizing
+
+### inputs
+
+The following inputs can be used as `step.with` keys:
+
+| Name           | Type   | Default | Description                 |
+| -------------- | ------ | ------- | --------------------------- |
+| `milliseconds` | Number | 1000    | Your input description here |
+
+### outputs
+
+The following outputs are available:
+
+| Name   | Type   | Description                  |
+| ------ | ------ | ---------------------------- |
+| `time` | String | Your output description here |
+
 ## Scenarios
 
 - [Scenario 1](#scenario-1)
@@ -29,15 +47,15 @@
 ### Scenario 1
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: vicamo/gitea-actions-template@main
 ```
 
 ### Scenario 2
 
 ```yaml
-- uses: actions/checkout@v4
+- uses: vicamo/gitea-actions-template@main
   with:
-    sparse-checkout: .
+    milliseconds: 2500
 ```
 
 ## License
