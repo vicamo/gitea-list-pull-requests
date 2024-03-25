@@ -6,8 +6,8 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as ih from '../src/input-helper'
 
-const DEFAULT_REPO_OWNER = 'vicamo'
-const DEFAULT_REPO_NAME = 'gitea-list-pull-requests'
+const DEFAULT_REPO_OWNER = 'gitea'
+const DEFAULT_REPO_NAME = 'tea'
 const DEFAULT_REPO = `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
 const DEFAULT_SERVER_URL = 'https://gitea.com'
 const RANDOM_TOKEN = 'this_is_really_a_random_token'

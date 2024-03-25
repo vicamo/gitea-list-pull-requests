@@ -10,8 +10,8 @@ import * as core from '@actions/core'
 import * as ih from '../src/input-helper'
 import * as main from '../src/main'
 
-const DEFAULT_REPO_OWNER = 'vicamo'
-const DEFAULT_REPO_NAME = 'gitea-list-pull-requests'
+const DEFAULT_REPO_OWNER = 'gitea'
+const DEFAULT_REPO_NAME = 'tea'
 const DEFAULT_SERVER_URL = 'https://gitea.com'
 
 const TIMEOUT_ERROR_SECONDS = 10
