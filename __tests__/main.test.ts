@@ -38,18 +38,31 @@ describe('action', () => {
       .mockImplementation()
   })
 
+  function buildInputSettings(
+    d: {
+      repositoryOwner?: string
+      repositoryName?: string
+      token?: string
+      serverUrl?: string
+    } = {}
+  ): ih.IInputSettings {
+    return {
+      repositoryOwner:
+        d.repositoryOwner === undefined
+          ? DEFAULT_REPO_OWNER
+          : d.repositoryOwner,
+      repositoryName:
+        d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
+      token: d.token === undefined ? '' : d.token,
+      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl
+    }
+  }
+
   it(
     'invoked with all default inputs',
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => {
-        return {
-          repositoryOwner: DEFAULT_REPO_OWNER,
-          repositoryName: DEFAULT_REPO_NAME,
-          token: '',
-          serverUrl: DEFAULT_SERVER_URL
-        } as ih.IInputSettings
-      })
+      getInputSettingsMock.mockImplementation(async () => buildInputSettings())
 
       await main.run()
 
@@ -69,14 +82,9 @@ describe('action', () => {
     'invoked with invalid repo owner/name',
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => {
-        return {
-          repositoryOwner: 'a',
-          repositoryName: 'b',
-          token: '',
-          serverUrl: DEFAULT_SERVER_URL
-        } as ih.IInputSettings
-      })
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ repositoryOwner: 'a', repositoryName: 'b' })
+      )
 
       await main.run()
 
@@ -92,14 +100,9 @@ describe('action', () => {
     'invoked with an invalid token',
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => {
-        return {
-          repositoryOwner: DEFAULT_REPO_OWNER,
-          repositoryName: DEFAULT_REPO_NAME,
-          token: 'invalid_token',
-          serverUrl: DEFAULT_SERVER_URL
-        } as ih.IInputSettings
-      })
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ token: 'invalid_token' })
+      )
 
       await main.run()
 
@@ -115,14 +118,9 @@ describe('action', () => {
     'invoked with an invalid server_url',
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => {
-        return {
-          repositoryOwner: DEFAULT_REPO_OWNER,
-          repositoryName: DEFAULT_REPO_NAME,
-          token: '',
-          serverUrl: 'an invalid url'
-        } as ih.IInputSettings
-      })
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ serverUrl: 'an invalid url' })
+      )
 
       await main.run()
 

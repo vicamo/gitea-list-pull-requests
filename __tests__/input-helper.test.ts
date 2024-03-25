@@ -8,6 +8,7 @@ import * as ih from '../src/input-helper'
 
 const DEFAULT_REPO_OWNER = 'vicamo'
 const DEFAULT_REPO_NAME = 'gitea-list-pull-requests'
+const DEFAULT_REPO = `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
 const DEFAULT_SERVER_URL = 'https://gitea.com'
 const RANDOM_TOKEN = 'this_is_really_a_random_token'
 
@@ -22,7 +23,7 @@ describe('get inputs', () => {
     jest.clearAllMocks()
 
     process.env = {
-      GITHUB_REPOSITORY: `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`,
+      GITHUB_REPOSITORY: DEFAULT_REPO,
       GITHUB_SERVER_URL: DEFAULT_SERVER_URL
     }
 
@@ -35,29 +36,46 @@ describe('get inputs', () => {
     process.env = originalEnv
   })
 
+  function getInputDefault(name: string): string {
+    switch (name) {
+      case 'repository':
+        return DEFAULT_REPO
+      case 'token':
+        return RANDOM_TOKEN
+      case 'server_url':
+        return DEFAULT_SERVER_URL
+      default:
+        throw new Error(`Unexpected input: ${name}`)
+    }
+  }
+
+  function buildInputSettings(
+    d: {
+      repositoryOwner?: string
+      repositoryName?: string
+      token?: string
+      serverUrl?: string
+    } = {}
+  ): ih.IInputSettings {
+    return {
+      repositoryOwner:
+        d.repositoryOwner === undefined
+          ? DEFAULT_REPO_OWNER
+          : d.repositoryOwner,
+      repositoryName:
+        d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
+      token: d.token === undefined ? RANDOM_TOKEN : d.token,
+      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl
+    }
+  }
+
   it('invoked with all default inputs', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case 'repository':
-          return `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
-        case 'token':
-          return RANDOM_TOKEN
-        case 'server_url':
-          return DEFAULT_SERVER_URL
-        default:
-          throw new Error(`Unexpected input: ${name}`)
-      }
-    })
+    getInputMock.mockImplementation(getInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
-    expect(inputSettings).toMatchObject({
-      repositoryOwner: DEFAULT_REPO_OWNER,
-      repositoryName: DEFAULT_REPO_NAME,
-      token: RANDOM_TOKEN,
-      serverUrl: DEFAULT_SERVER_URL
-    } as ih.IInputSettings)
+    expect(inputSettings).toMatchObject(buildInputSettings())
     expect(errorMock).not.toHaveBeenCalled()
   })
 
@@ -69,23 +87,19 @@ describe('get inputs', () => {
       switch (name) {
         case 'repository':
           return `${expectedOwner}/${expectedName}`
-        case 'token':
-          return RANDOM_TOKEN
-        case 'server_url':
-          return DEFAULT_SERVER_URL
         default:
-          throw new Error(`Unexpected input: ${name}`)
+          return getInputDefault(name)
       }
     })
 
     const inputSettings = await ih.getInputSettings()
 
-    expect(inputSettings).toMatchObject({
-      repositoryOwner: expectedOwner,
-      repositoryName: expectedName,
-      token: RANDOM_TOKEN,
-      serverUrl: DEFAULT_SERVER_URL
-    } as ih.IInputSettings)
+    expect(inputSettings).toMatchObject(
+      buildInputSettings({
+        repositoryOwner: expectedOwner,
+        repositoryName: expectedName
+      })
+    )
     expect(errorMock).not.toHaveBeenCalled()
   })
 
@@ -95,23 +109,14 @@ describe('get inputs', () => {
       switch (name) {
         case 'repository':
           return ''
-        case 'token':
-          return RANDOM_TOKEN
-        case 'server_url':
-          return DEFAULT_SERVER_URL
         default:
-          throw new Error(`Unexpected input: ${name}`)
+          return getInputDefault(name)
       }
     })
 
     const inputSettings = await ih.getInputSettings()
 
-    expect(inputSettings).toMatchObject({
-      repositoryOwner: DEFAULT_REPO_OWNER,
-      repositoryName: DEFAULT_REPO_NAME,
-      token: RANDOM_TOKEN,
-      serverUrl: DEFAULT_SERVER_URL
-    } as ih.IInputSettings)
+    expect(inputSettings).toMatchObject(buildInputSettings())
     expect(errorMock).not.toHaveBeenCalled()
   })
 
@@ -121,12 +126,8 @@ describe('get inputs', () => {
       switch (name) {
         case 'repository':
           return 'ab'
-        case 'token':
-          return RANDOM_TOKEN
-        case 'server_url':
-          return DEFAULT_SERVER_URL
         default:
-          throw new Error(`Unexpected input: ${name}`)
+          return getInputDefault(name)
       }
     })
 
@@ -140,25 +141,18 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
-        case 'repository':
-          return `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
-        case 'token':
-          return RANDOM_TOKEN
         case 'server_url':
           return expectedUrl
         default:
-          throw new Error(`Unexpected input: ${name}`)
+          return getInputDefault(name)
       }
     })
 
     const inputSettings = await ih.getInputSettings()
 
-    expect(inputSettings).toMatchObject({
-      repositoryOwner: DEFAULT_REPO_OWNER,
-      repositoryName: DEFAULT_REPO_NAME,
-      token: RANDOM_TOKEN,
-      serverUrl: expectedUrl
-    } as ih.IInputSettings)
+    expect(inputSettings).toMatchObject(
+      buildInputSettings({ serverUrl: expectedUrl })
+    )
     expect(errorMock).not.toHaveBeenCalled()
   })
 
@@ -168,25 +162,18 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
-        case 'repository':
-          return `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
-        case 'token':
-          return RANDOM_TOKEN
         case 'server_url':
           return ''
         default:
-          throw new Error(`Unexpected input: ${name}`)
+          return getInputDefault(name)
       }
     })
 
     const inputSettings = await ih.getInputSettings()
 
-    expect(inputSettings).toMatchObject({
-      repositoryOwner: DEFAULT_REPO_OWNER,
-      repositoryName: DEFAULT_REPO_NAME,
-      token: RANDOM_TOKEN,
-      serverUrl: expectedUrl
-    } as ih.IInputSettings)
+    expect(inputSettings).toMatchObject(
+      buildInputSettings({ serverUrl: expectedUrl })
+    )
     expect(errorMock).not.toHaveBeenCalled()
   })
 })
