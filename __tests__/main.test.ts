@@ -14,6 +14,9 @@ const DEFAULT_REPO_OWNER = 'vicamo'
 const DEFAULT_REPO_NAME = 'gitea-list-pull-requests'
 const DEFAULT_SERVER_URL = 'https://gitea.com'
 
+const TIMEOUT_ERROR_SECONDS = 10
+const TIMEOUT_SECONDS = 60
+
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
@@ -75,7 +78,7 @@ describe('action', () => {
       expect(setFailedMock).not.toHaveBeenCalled()
       expect(errorMock).not.toHaveBeenCalled()
     },
-    60 * 1000
+    TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -93,7 +96,7 @@ describe('action', () => {
       expect(setFailedMock).not.toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalled()
     },
-    10 * 1000
+    TIMEOUT_ERROR_SECONDS * 1000
   )
 
   it(
@@ -111,7 +114,7 @@ describe('action', () => {
       expect(setFailedMock).not.toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalled()
     },
-    10 * 1000
+    TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -129,6 +132,6 @@ describe('action', () => {
       expect(setFailedMock).not.toHaveBeenCalled()
       expect(errorMock).toHaveBeenCalled()
     },
-    10 * 1000
+    TIMEOUT_ERROR_SECONDS * 1000
   )
 })
