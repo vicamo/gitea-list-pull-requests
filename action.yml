@@ -7,7 +7,8 @@ branding:
 
 inputs:
   repository:
-    description: 'Repository name with owner. For example, actions/checkout'
+    description: >
+      Repository name with owner. For example, vicamo/gitea-list-pull-requests
     default: ${{ github.repository }}
   token:
     description: >
