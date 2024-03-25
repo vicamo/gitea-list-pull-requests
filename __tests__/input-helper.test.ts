@@ -5,6 +5,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as ih from '../src/input-helper'
+import * as os from 'os'
 
 const DEFAULT_REPO_OWNER = 'gitea'
 const DEFAULT_REPO_NAME = 'tea'
@@ -44,6 +45,11 @@ describe('get inputs', () => {
         return RANDOM_TOKEN
       case 'server_url':
         return DEFAULT_SERVER_URL
+      case 'state':
+        return 'all'
+      case 'milestone':
+      case 'labels':
+        return ''
       default:
         throw new Error(`Unexpected input: ${name}`)
     }
@@ -55,6 +61,9 @@ describe('get inputs', () => {
       repositoryName?: string
       token?: string
       serverUrl?: string
+      state?: string
+      milestone?: string
+      labels?: string[]
     } = {}
   ): ih.IInputSettings {
     return {
@@ -65,7 +74,10 @@ describe('get inputs', () => {
       repositoryName:
         d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
       token: d.token === undefined ? RANDOM_TOKEN : d.token,
-      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl
+      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
+      state: d.state === undefined ? 'all' : d.state,
+      milestone: d.milestone === undefined ? '' : d.milestone,
+      labels: d.labels === undefined ? [] : d.labels
     }
   }
 
@@ -173,6 +185,116 @@ describe('get inputs', () => {
 
     expect(inputSettings).toMatchObject(
       buildInputSettings({ serverUrl: expectedUrl })
+    )
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('test open state input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'state':
+          return 'open'
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(buildInputSettings({ state: 'open' }))
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('test closed state input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'state':
+          return 'closed'
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(buildInputSettings({ state: 'closed' }))
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('test empty state input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'state':
+          return ''
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(buildInputSettings({ state: 'all' }))
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('test illegal state input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'state':
+          return 'unexpected'
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(
+      /^Invalid request state: /
+    )
+  })
+
+  it('test single-lined labels input option', async () => {
+    const expectedLabel = 'hello'
+
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'labels':
+          return expectedLabel
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(
+      buildInputSettings({ labels: [expectedLabel] })
+    )
+    expect(errorMock).not.toHaveBeenCalled()
+  })
+
+  it('test multi-lined labels input option', async () => {
+    const expectedLabels = ['a', 'b', 'c']
+
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'labels':
+          return expectedLabels.join(os.EOL)
+        default:
+          return getInputDefault(name)
+      }
+    })
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(
+      buildInputSettings({ labels: expectedLabels })
     )
     expect(errorMock).not.toHaveBeenCalled()
   })

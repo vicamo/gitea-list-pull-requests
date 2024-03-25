@@ -36,6 +36,25 @@ Gitea action that lists pull requests with filtering conditions.
     #
     # Default: ${{ github.server_url }}
     server_url: ''
+
+    # State of pull request, e.g. open, closed, or all.
+    #
+    # Default: 'all'
+    state: ''
+
+    # A project milestone name. If the specified milestone
+    # is not available for the specified project, it will
+    # return an error.
+    #
+    # Default: ''
+    milestone: ''
+
+    # A multi-line string with one label name for each
+    # line. If any of the specified label is not available
+    # for the specified project, it will return an error.
+    #
+    # Default: ''
+    labels:
 ```
 
 <!-- end usage -->
@@ -46,11 +65,14 @@ Gitea action that lists pull requests with filtering conditions.
 
 The following inputs can be used as `step.with` keys:
 
-| Name         | Type   | Default                    | Description                 |
-| :----------- | ------ | :------------------------- | :-------------------------- |
-| `repository` | String | `${{ github.repository }}` | Repository name with owner. |
-| `token`      | String | `${{ github.token }}`      | Access Token.               |
-| `server_url` | String | `${{ github.server_url }}` | The server URL.             |
+| Name         | Type              | Default                    | Description                                            |
+| :----------- | ----------------- | :------------------------- | :----------------------------------------------------- |
+| `repository` | String            | `${{ github.repository }}` | Repository name with owner.                            |
+| `token`      | String            | `${{ github.token }}`      | Access Token.                                          |
+| `server_url` | String            | `${{ github.server_url }}` | The server URL.                                        |
+| `state`      | String            | `all`                      | State of pull request, e.g. open, closed, or all.      |
+| `milestone`  | String            |                            | A project milestone name.                              |
+| `labels`     | Multi-line String |                            | A multi-line string with one label name for each line. |
 
 ### outputs
 

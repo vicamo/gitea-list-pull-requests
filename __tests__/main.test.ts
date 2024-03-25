@@ -47,6 +47,9 @@ describe('action', () => {
       repositoryName?: string
       token?: string
       serverUrl?: string
+      state?: string
+      milestone?: string
+      labels?: string[]
     } = {}
   ): ih.IInputSettings {
     return {
@@ -57,7 +60,10 @@ describe('action', () => {
       repositoryName:
         d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
       token: d.token === undefined ? '' : d.token,
-      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl
+      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
+      state: d.state === undefined ? 'all' : d.state,
+      milestone: d.milestone === undefined ? '' : d.milestone,
+      labels: d.labels === undefined ? [] : d.labels
     }
   }
 
@@ -133,5 +139,116 @@ describe('action', () => {
       expect(errorMock).toHaveBeenCalled()
     },
     TIMEOUT_ERROR_SECONDS * 1000
+  )
+
+  it(
+    'invoked with open state',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ state: 'open' })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).toHaveBeenCalled()
+      expect(setFailedMock).not.toHaveBeenCalled()
+      expect(errorMock).not.toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with closed state',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ state: 'closed' })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).toHaveBeenCalled()
+      expect(setFailedMock).not.toHaveBeenCalled()
+      expect(errorMock).not.toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with an invalid milestone',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ milestone: 'no such milestone' })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).not.toHaveBeenCalled()
+      expect(setFailedMock).toHaveBeenCalled()
+      expect(errorMock).toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with milestone and labels',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({
+          milestone: 'v0.10.0',
+          labels: ['kind/feature', '', 'kind/enhancement']
+        })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).toHaveBeenCalled()
+      expect(setFailedMock).not.toHaveBeenCalled()
+      expect(errorMock).not.toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with a single-lined label',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ labels: ['kind/bug'] })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).toHaveBeenCalled()
+      expect(setFailedMock).not.toHaveBeenCalled()
+      expect(errorMock).not.toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with an invalid label',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ labels: ['no such label'] })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).not.toHaveBeenCalled()
+      expect(setFailedMock).toHaveBeenCalled()
+      expect(errorMock).toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
   )
 })
