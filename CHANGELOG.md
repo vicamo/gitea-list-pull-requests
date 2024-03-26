@@ -2,6 +2,15 @@
 
 # Changelog
 
+## [1.0.1](https://github.com/vicamo/gitea-actions-template/compare/v1.0.0...v1.0.1) (2024-03-26)
+
+### 🧰 Maintenance
+
+- markdownlint: disable MD013,MD024 for CHANGELOG.md
+  ([1c227a8](https://github.com/vicamo/gitea-actions-template/commit/1c227a888ef4abbf959d935298211498ff92f32d))
+- release-please: disable include-component-in-tag
+  ([f171d62](https://github.com/vicamo/gitea-actions-template/commit/f171d62a86d483a0a4dc363b8fe62d8128642a4f))
+
 ## 1.0.0 (2024-03-26)
 
 ### 🐛 Bugfixes
