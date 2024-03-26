@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD013 MD024 -->
+
 # Changelog
 
 ## 1.0.0 (2024-03-26)
