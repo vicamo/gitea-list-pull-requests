@@ -3,6 +3,7 @@
 [![GitHub Super-Linter](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/linter.yml)](https://github.com/super-linter/super-linter)
 ![CI](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/ci.yml)
 [![Check dist/](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/check-dist.yml)](https://gitea.com/vicamo/gitea-actions-template/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/vicamo/gitea-actions-template/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/vicamo/gitea-actions-template/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 ## What's new
