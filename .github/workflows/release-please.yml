@@ -20,7 +20,8 @@ jobs:
         id: rp
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-          release-type: node
+          config-file: .github/release-please/release-please-config.json
+          manifest-file: .github/release-please/.release-please-manifest.json
 
       - uses: actions/checkout@v4
         if: ${{ steps.rp.outputs.release_created && env.NODE_AUTH_TOKEN != '' }}
