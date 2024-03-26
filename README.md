@@ -17,6 +17,10 @@
 ```yaml
 - uses: vicamo/gitea-actions-template@main
   with:
+    # Your input description here
+    #
+    # Default: 1000
+    milliseconds: 1000
 ```
 
 <!-- end usage -->
