@@ -2,6 +2,13 @@
 
 # Changelog
 
+## [1.0.2](https://github.com/vicamo/gitea-actions-template/compare/v1.0.1...v1.0.2) (2024-03-27)
+
+### 🧰 Maintenance
+
+- release-please: update SemVer tags as well
+  ([989a13c](https://github.com/vicamo/gitea-actions-template/commit/989a13ca6a8c624c6d4265889f497a723a44218e))
+
 ## [1.0.1](https://github.com/vicamo/gitea-actions-template/compare/v1.0.0...v1.0.1) (2024-03-26)
 
 ### 🧰 Maintenance
