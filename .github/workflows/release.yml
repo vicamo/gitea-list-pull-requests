@@ -24,7 +24,8 @@ jobs:
           manifest-file: .github/release-please/.release-please-manifest.json
 
       - uses: actions/checkout@v4
-        if: ${{ steps.rp.outputs.release_created && env.NODE_AUTH_TOKEN != '' }}
+        if: ${{ steps.rp.outputs.release_created }}
+
       - uses: actions/setup-node@v4
         if: ${{ steps.rp.outputs.release_created && env.NODE_AUTH_TOKEN != '' }}
         with:
@@ -34,3 +35,18 @@ jobs:
         if: ${{ steps.rp.outputs.release_created && env.NODE_AUTH_TOKEN != '' }}
       - run: npm publish
         if: ${{ steps.rp.outputs.release_created && env.NODE_AUTH_TOKEN != '' }}
+
+      - name: Update major/minor tags
+        if: ${{ steps.rp.outputs.release_created }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "159864+github-actions.bot@users.noreply.github.com"
+
+          full_tag="${{ steps.rp.outputs.tag_name }}"
+          major_minor_tag="${full_tag%.*}"
+          major_tag="${major_minor_tag%.*}"
+          git tag -d "${major_tag}" "${major_minor_tag}" || true
+
+          git tag -a "${major_tag}" -m "Release ${major_tag}"
+          git tag -a "${major_minor_tag}" -m "Release ${major_minor_tag}"
+          git push -f origin "${major_tag}" "${major_minor_tag}"
