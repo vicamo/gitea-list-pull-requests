@@ -1,6 +1,5 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import * as os from 'os'
 
 export interface IInputSettings {
   /**
@@ -85,8 +84,7 @@ export async function getInputSettings(): Promise<IInputSettings> {
 
   result.milestone = core.getInput('milestone')
 
-  const labels = core.getInput('labels', { trimWhitespace: true })
-  result.labels = labels.length ? labels.split(os.EOL) : []
+  result.labels = core.getMultilineInput('labels')
 
   return result
 }

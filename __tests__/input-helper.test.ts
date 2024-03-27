@@ -5,7 +5,6 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
 import * as ih from '../src/input-helper'
-import * as os from 'os'
 
 const DEFAULT_REPO_OWNER = 'gitea'
 const DEFAULT_REPO_NAME = 'tea'
@@ -16,6 +15,7 @@ const RANDOM_TOKEN = 'this_is_really_a_random_token'
 // Mock the GitHub Actions core library
 let errorMock: jest.SpiedFunction<typeof core.error>
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
+let getMultilineInputMock: jest.SpiedFunction<typeof core.getMultilineInput>
 
 describe('get inputs', () => {
   const originalEnv = process.env
@@ -30,6 +30,9 @@ describe('get inputs', () => {
 
     errorMock = jest.spyOn(core, 'error').mockImplementation()
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
+    getMultilineInputMock = jest
+      .spyOn(core, 'getMultilineInput')
+      .mockImplementation()
   })
 
   afterEach(() => {
@@ -50,6 +53,15 @@ describe('get inputs', () => {
       case 'milestone':
       case 'labels':
         return ''
+      default:
+        throw new Error(`Unexpected input: ${name}`)
+    }
+  }
+
+  function getMultilineInputDefault(name: string): string[] {
+    switch (name) {
+      case 'labels':
+        return []
       default:
         throw new Error(`Unexpected input: ${name}`)
     }
@@ -84,6 +96,8 @@ describe('get inputs', () => {
   it('invoked with all default inputs', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -103,6 +117,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -125,6 +141,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -142,6 +160,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     expect.assertions(1)
     await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid repository /)
@@ -159,6 +179,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -180,6 +202,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -199,6 +223,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -216,6 +242,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -233,6 +261,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -250,6 +280,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     expect.assertions(1)
     await expect(ih.getInputSettings()).rejects.toThrow(
@@ -261,12 +293,14 @@ describe('get inputs', () => {
     const expectedLabel = 'hello'
 
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(name => {
       switch (name) {
         case 'labels':
-          return expectedLabel
+          return [expectedLabel]
         default:
-          return getInputDefault(name)
+          return getMultilineInputDefault(name)
       }
     })
 
@@ -282,12 +316,14 @@ describe('get inputs', () => {
     const expectedLabels = ['a', 'b', 'c']
 
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(name => {
       switch (name) {
         case 'labels':
-          return expectedLabels.join(os.EOL)
+          return expectedLabels
         default:
-          return getInputDefault(name)
+          return getMultilineInputDefault(name)
       }
     })
 

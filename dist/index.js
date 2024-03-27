@@ -34617,7 +34617,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getInputSettings = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const os = __importStar(__nccwpck_require__(2037));
 async function getInputSettings() {
     const result = {};
     // Qualified repository
@@ -34653,8 +34652,7 @@ async function getInputSettings() {
             throw new Error(`Invalid request state: '${state}'`);
     }
     result.milestone = core.getInput('milestone');
-    const labels = core.getInput('labels', { trimWhitespace: true });
-    result.labels = labels.length ? labels.split(os.EOL) : [];
+    result.labels = core.getMultilineInput('labels');
     return result;
 }
 exports.getInputSettings = getInputSettings;
