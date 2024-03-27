@@ -2749,6 +2749,35 @@ var Api = class extends HttpClient {
        * No description
        *
        * @tags organization
+       * @name OrgUpdateAvatar
+       * @summary Update Avatar
+       * @request POST:/orgs/{org}/avatar
+       * @secure
+       */
+      orgUpdateAvatar: (org, body, params = {}) => this.request(__spreadValues({
+        path: `/orgs/${org}/avatar`,
+        method: "POST",
+        body,
+        secure: true
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags organization
+       * @name OrgDeleteAvatar
+       * @summary Delete Avatar
+       * @request DELETE:/orgs/{org}/avatar
+       * @secure
+       */
+      orgDeleteAvatar: (org, params = {}) => this.request(__spreadValues({
+        path: `/orgs/${org}/avatar`,
+        method: "DELETE",
+        secure: true
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags organization
        * @name OrgListHooks
        * @summary List an organization's webhooks
        * @request GET:/orgs/{org}/hooks
@@ -3265,6 +3294,36 @@ var Api = class extends HttpClient {
       repoGetAssignees: (owner, repo, params = {}) => this.request(__spreadValues({
         path: `/repos/${owner}/${repo}/assignees`,
         method: "GET",
+        secure: true
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags repository
+       * @name RepoUpdateAvatar
+       * @summary Update avatar
+       * @request POST:/repos/{owner}/{repo}/avatar
+       * @secure
+       */
+      repoUpdateAvatar: (owner, repo, body, params = {}) => this.request(__spreadValues({
+        path: `/repos/${owner}/${repo}/avatar`,
+        method: "POST",
+        body,
+        secure: true,
+        type: "application/json" /* Json */
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags repository
+       * @name RepoDeleteAvatar
+       * @summary Delete avatar
+       * @request DELETE:/repos/{owner}/{repo}/avatar
+       * @secure
+       */
+      repoDeleteAvatar: (owner, repo, params = {}) => this.request(__spreadValues({
+        path: `/repos/${owner}/${repo}/avatar`,
+        method: "DELETE",
         secure: true
       }, params)),
       /**
@@ -6605,6 +6664,35 @@ var Api = class extends HttpClient {
        * No description
        *
        * @tags user
+       * @name UserUpdateAvatar
+       * @summary Update Avatar
+       * @request POST:/user/avatar
+       * @secure
+       */
+      userUpdateAvatar: (body, params = {}) => this.request(__spreadValues({
+        path: `/user/avatar`,
+        method: "POST",
+        body,
+        secure: true
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags user
+       * @name UserDeleteAvatar
+       * @summary Delete Avatar
+       * @request DELETE:/user/avatar
+       * @secure
+       */
+      userDeleteAvatar: (params = {}) => this.request(__spreadValues({
+        path: `/user/avatar`,
+        method: "DELETE",
+        secure: true
+      }, params)),
+      /**
+       * No description
+       *
+       * @tags user
        * @name UserListEmails
        * @summary List the authenticated user's email addresses
        * @request GET:/user/emails
@@ -7423,7 +7511,7 @@ function giteaApi(baseUrl, options) {
       return {
         secure: true,
         headers: {
-          Authorization: `token ${options.token}`
+          Authorization: `Bearer ${options.token}`
         }
       };
     }
@@ -7433,7 +7521,7 @@ function giteaApi(baseUrl, options) {
 0 && (0);
 /**
  * @title Gitea API.
- * @version 1.20.1
+ * @version 1.21.0+dev-326-g28ecac802
  * @license MIT (http://opensource.org/licenses/MIT)
  * @baseUrl /api/v1
  *
