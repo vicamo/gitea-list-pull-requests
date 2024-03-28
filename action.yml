@@ -33,13 +33,11 @@ inputs:
     description: >
       A project milestone name. If the specified milestone is not available for
       the specified project, it will return an error.
-    default: ''
   labels:
     description: >
       A multi-line string with one label name for each line. If any of the
       specified label is not available for the specified project, it will return
       an error.
-    default: ''
 
 outputs:
   json:

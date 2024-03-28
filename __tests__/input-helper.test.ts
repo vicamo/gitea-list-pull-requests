@@ -3,38 +3,26 @@
  */
 
 import * as core from '@actions/core'
-import * as github from '@actions/github'
 import * as ih from '../src/input-helper'
-import * as os from 'os'
 
 const DEFAULT_REPO_OWNER = 'gitea'
 const DEFAULT_REPO_NAME = 'tea'
 const DEFAULT_REPO = `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
 const DEFAULT_SERVER_URL = 'https://gitea.com'
-const RANDOM_TOKEN = 'this_is_really_a_random_token'
+const DEFAULT_TOKEN = 'default-token'
 
 // Mock the GitHub Actions core library
-let errorMock: jest.SpiedFunction<typeof core.error>
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
+let getMultilineInputMock: jest.SpiedFunction<typeof core.getMultilineInput>
 
 describe('get inputs', () => {
-  const originalEnv = process.env
-
   beforeEach(() => {
     jest.clearAllMocks()
 
-    process.env = {
-      GITHUB_REPOSITORY: DEFAULT_REPO,
-      GITHUB_SERVER_URL: DEFAULT_SERVER_URL
-    }
-
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
-  })
-
-  afterEach(() => {
-    // Reset process.env after each test case
-    process.env = originalEnv
+    getMultilineInputMock = jest
+      .spyOn(core, 'getMultilineInput')
+      .mockImplementation()
   })
 
   function getInputDefault(name: string): string {
@@ -42,7 +30,7 @@ describe('get inputs', () => {
       case 'repository':
         return DEFAULT_REPO
       case 'token':
-        return RANDOM_TOKEN
+        return DEFAULT_TOKEN
       case 'server_url':
         return DEFAULT_SERVER_URL
       case 'state':
@@ -50,6 +38,15 @@ describe('get inputs', () => {
       case 'milestone':
       case 'labels':
         return ''
+      default:
+        throw new Error(`Unexpected input: ${name}`)
+    }
+  }
+
+  function getMultilineInputDefault(name: string): string[] {
+    switch (name) {
+      case 'labels':
+        return []
       default:
         throw new Error(`Unexpected input: ${name}`)
     }
@@ -73,7 +70,7 @@ describe('get inputs', () => {
           : d.repositoryOwner,
       repositoryName:
         d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
-      token: d.token === undefined ? RANDOM_TOKEN : d.token,
+      token: d.token === undefined ? DEFAULT_TOKEN : d.token,
       serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
       state: d.state === undefined ? 'all' : d.state,
       milestone: d.milestone === undefined ? '' : d.milestone,
@@ -84,11 +81,12 @@ describe('get inputs', () => {
   it('invoked with all default inputs', async () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings())
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test repository input option', async () => {
@@ -103,6 +101,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
@@ -112,7 +112,6 @@ describe('get inputs', () => {
         repositoryName: expectedName
       })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty repository input option', async () => {
@@ -125,11 +124,11 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(buildInputSettings())
-    expect(errorMock).not.toHaveBeenCalled()
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid repository /)
   })
 
   it('test invalid repository input option', async () => {
@@ -142,6 +141,8 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     expect.assertions(1)
     await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid repository /)
@@ -159,18 +160,17 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(
       buildInputSettings({ serverUrl: expectedUrl })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty server_url input option', async () => {
-    const expectedUrl = github.context.serverUrl
-
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
@@ -180,13 +180,11 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(
-      buildInputSettings({ serverUrl: expectedUrl })
-    )
-    expect(errorMock).not.toHaveBeenCalled()
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid server_url /)
   })
 
   it('test open state input option', async () => {
@@ -199,11 +197,12 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings({ state: 'open' }))
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test closed state input option', async () => {
@@ -216,11 +215,12 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings({ state: 'closed' }))
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty state input option', async () => {
@@ -233,11 +233,11 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(buildInputSettings({ state: 'all' }))
-    expect(errorMock).not.toHaveBeenCalled()
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid state /)
   })
 
   it('test illegal state input option', async () => {
@@ -250,23 +250,25 @@ describe('get inputs', () => {
           return getInputDefault(name)
       }
     })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     expect.assertions(1)
-    await expect(ih.getInputSettings()).rejects.toThrow(
-      /^Invalid request state: /
-    )
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid state /)
   })
 
   it('test single-lined labels input option', async () => {
     const expectedLabel = 'hello'
 
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(name => {
       switch (name) {
         case 'labels':
-          return expectedLabel
+          return [expectedLabel]
         default:
-          return getInputDefault(name)
+          return getMultilineInputDefault(name)
       }
     })
 
@@ -275,19 +277,20 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ labels: [expectedLabel] })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test multi-lined labels input option', async () => {
     const expectedLabels = ['a', 'b', 'c']
 
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation(getInputDefault)
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(name => {
       switch (name) {
         case 'labels':
-          return expectedLabels.join(os.EOL)
+          return expectedLabels
         default:
-          return getInputDefault(name)
+          return getMultilineInputDefault(name)
       }
     })
 
@@ -296,6 +299,5 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ labels: expectedLabels })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 })

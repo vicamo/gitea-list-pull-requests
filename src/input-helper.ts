@@ -1,6 +1,4 @@
 import * as core from '@actions/core'
-import * as github from '@actions/github'
-import * as os from 'os'
 
 export interface IInputSettings {
   /**
@@ -21,7 +19,7 @@ export interface IInputSettings {
   /**
    * User override on the Gitea Server/Host URL
    */
-  serverUrl: string | undefined
+  serverUrl: string
 
   /**
    * State of pull request
@@ -43,9 +41,7 @@ export async function getInputSettings(): Promise<IInputSettings> {
   const result = {} as unknown as IInputSettings
 
   // Qualified repository
-  const qualifiedRepository =
-    core.getInput('repository') ||
-    `${github.context.repo.owner}/${github.context.repo.repo}`
+  const qualifiedRepository = core.getInput('repository')
   core.debug(`qualified repository = '${qualifiedRepository}'`)
   const splitRepository = qualifiedRepository.split('/')
   if (
@@ -61,14 +57,15 @@ export async function getInputSettings(): Promise<IInputSettings> {
   result.repositoryName = splitRepository[1]
 
   // Auth token
-  result.token = core.getInput('token', { required: true })
+  result.token = core.getInput('token')
 
   // Determine the GitHub URL that the repository is being hosted from
-  result.serverUrl =
-    core.getInput('server_url') || `${github.context.serverUrl}`
+  result.serverUrl = core.getInput('server_url')
   core.debug(`Gitea server URL = ${result.serverUrl}`)
+  if (!result.serverUrl)
+    throw new Error(`Invalid server_url '${result.serverUrl}'`)
 
-  const state = core.getInput('state') || 'all'
+  const state = core.getInput('state')
   switch (state) {
     case 'all':
       result.state = 'all'
@@ -80,13 +77,12 @@ export async function getInputSettings(): Promise<IInputSettings> {
       result.state = 'closed'
       break
     default:
-      throw new Error(`Invalid request state: '${state}'`)
+      throw new Error(`Invalid state '${state}'`)
   }
 
   result.milestone = core.getInput('milestone')
 
-  const labels = core.getInput('labels', { trimWhitespace: true })
-  result.labels = labels.length ? labels.split(os.EOL) : []
+  result.labels = core.getMultilineInput('labels')
 
   return result
 }
