@@ -10,7 +10,7 @@ const DEFAULT_REPO_OWNER = 'gitea'
 const DEFAULT_REPO_NAME = 'tea'
 const DEFAULT_REPO = `${DEFAULT_REPO_OWNER}/${DEFAULT_REPO_NAME}`
 const DEFAULT_SERVER_URL = 'https://gitea.com'
-const RANDOM_TOKEN = 'this_is_really_a_random_token'
+const DEFAULT_TOKEN = 'default-token'
 
 // Mock the GitHub Actions core library
 let errorMock: jest.SpiedFunction<typeof core.error>
@@ -45,7 +45,7 @@ describe('get inputs', () => {
       case 'repository':
         return DEFAULT_REPO
       case 'token':
-        return RANDOM_TOKEN
+        return DEFAULT_TOKEN
       case 'server_url':
         return DEFAULT_SERVER_URL
       case 'state':
@@ -85,7 +85,7 @@ describe('get inputs', () => {
           : d.repositoryOwner,
       repositoryName:
         d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
-      token: d.token === undefined ? RANDOM_TOKEN : d.token,
+      token: d.token === undefined ? DEFAULT_TOKEN : d.token,
       serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
       state: d.state === undefined ? 'all' : d.state,
       milestone: d.milestone === undefined ? '' : d.milestone,
