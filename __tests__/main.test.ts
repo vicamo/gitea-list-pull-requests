@@ -24,7 +24,6 @@ const runMock = jest.spyOn(main, 'run')
 const reqArrayRegex = /^\[.*\]$/
 
 // Mock the GitHub Actions core library
-let errorMock: jest.SpiedFunction<typeof core.error>
 let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
 let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
 let getInputSettingsMock: jest.SpiedFunction<typeof ih.getInputSettings>
@@ -33,7 +32,6 @@ describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
     getInputSettingsMock = jest
@@ -82,7 +80,6 @@ describe('action', () => {
         expect.stringMatching(reqArrayRegex)
       )
       expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -99,8 +96,7 @@ describe('action', () => {
 
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).toHaveBeenCalled()
+      expect(setFailedMock).toHaveBeenCalled()
     },
     TIMEOUT_ERROR_SECONDS * 1000
   )
@@ -117,8 +113,7 @@ describe('action', () => {
 
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).toHaveBeenCalled()
+      expect(setFailedMock).toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -135,8 +130,7 @@ describe('action', () => {
 
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).toHaveBeenCalled()
+      expect(setFailedMock).toHaveBeenCalled()
     },
     TIMEOUT_ERROR_SECONDS * 1000
   )
@@ -154,7 +148,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -172,7 +165,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -190,7 +182,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
-      expect(errorMock).toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -211,7 +202,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -229,7 +219,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
-      expect(errorMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
@@ -247,7 +236,6 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
-      expect(errorMock).toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )

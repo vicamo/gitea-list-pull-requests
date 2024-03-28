@@ -79,8 +79,8 @@ export async function run(): Promise<void> {
     // Set outputs for other workflow steps to use
     core.setOutput('json', JSON.stringify(resp.data))
   } catch (error) {
-    core.error('Failed to fetch pull requests')
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
+    else core.setFailed('Failed to fetch pull requests')
   }
 }
