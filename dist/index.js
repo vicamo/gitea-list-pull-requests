@@ -30452,29 +30452,14 @@ async function run() {
                 query.milestone = milestones[0].id;
         }
         if (inputSettings.labels.length) {
-            const names = [];
-            for (let name of inputSettings.labels) {
-                name = name.trim();
-                if (name.length)
-                    names.push(name);
-            }
-            if (names.length) {
-                const ids = [];
-                const resp = await api.repos.issueListLabels(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`);
-                for (const name of names) {
-                    let found = false;
-                    for (const label of resp.data) {
-                        if (label.name === name) {
-                            ids.push(label.id);
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found)
-                        throw new Error(`No such label '${name}' found.`);
+            const resp = await api.repos.issueListLabels(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`);
+            query.labels = inputSettings.labels.map(label => {
+                for (const result of resp.data) {
+                    if (result.name === label)
+                        return result.id;
                 }
-                query.labels = ids;
-            }
+                throw new Error(`No such label '${label}' found.`);
+            });
         }
         const resp = await api.repos.repoListPullRequests(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, query);
         // Set outputs for other workflow steps to use

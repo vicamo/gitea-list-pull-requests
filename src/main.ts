@@ -39,35 +39,18 @@ export async function run(): Promise<void> {
     }
 
     if (inputSettings.labels.length) {
-      const names: string[] = []
-      for (let name of inputSettings.labels) {
-        name = name.trim()
-        if (name.length) names.push(name)
-      }
+      const resp = await api.repos.issueListLabels(
+        `${inputSettings.repositoryOwner}`,
+        `${inputSettings.repositoryName}`
+      )
 
-      if (names.length) {
-        const ids: number[] = []
-
-        const resp = await api.repos.issueListLabels(
-          `${inputSettings.repositoryOwner}`,
-          `${inputSettings.repositoryName}`
-        )
-
-        for (const name of names) {
-          let found = false
-          for (const label of resp.data) {
-            if (label.name === name) {
-              ids.push(label.id as number)
-              found = true
-              break
-            }
-          }
-
-          if (!found) throw new Error(`No such label '${name}' found.`)
+      query.labels = inputSettings.labels.map(label => {
+        for (const result of resp.data) {
+          if (result.name === label) return result.id as number
         }
 
-        query.labels = ids
-      }
+        throw new Error(`No such label '${label}' found.`)
+      })
     }
 
     const resp = await api.repos.repoListPullRequests(
