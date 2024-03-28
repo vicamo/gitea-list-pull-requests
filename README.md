@@ -54,7 +54,7 @@ Gitea action that lists pull requests with filtering conditions.
     # for the specified project, it will return an error.
     #
     # Default: ''
-    labels:
+    labels: ''
 ```
 
 <!-- end usage -->

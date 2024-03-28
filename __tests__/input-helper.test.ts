@@ -3,7 +3,6 @@
  */
 
 import * as core from '@actions/core'
-import * as github from '@actions/github'
 import * as ih from '../src/input-helper'
 
 const DEFAULT_REPO_OWNER = 'gitea'
@@ -17,25 +16,13 @@ let getInputMock: jest.SpiedFunction<typeof core.getInput>
 let getMultilineInputMock: jest.SpiedFunction<typeof core.getMultilineInput>
 
 describe('get inputs', () => {
-  const originalEnv = process.env
-
   beforeEach(() => {
     jest.clearAllMocks()
-
-    process.env = {
-      GITHUB_REPOSITORY: DEFAULT_REPO,
-      GITHUB_SERVER_URL: DEFAULT_SERVER_URL
-    }
 
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
     getMultilineInputMock = jest
       .spyOn(core, 'getMultilineInput')
       .mockImplementation()
-  })
-
-  afterEach(() => {
-    // Reset process.env after each test case
-    process.env = originalEnv
   })
 
   function getInputDefault(name: string): string {
@@ -140,9 +127,8 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getMultilineInput()
     getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(buildInputSettings())
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid repository /)
   })
 
   it('test invalid repository input option', async () => {
@@ -185,8 +171,6 @@ describe('get inputs', () => {
   })
 
   it('test empty server_url input option', async () => {
-    const expectedUrl = github.context.serverUrl
-
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(name => {
       switch (name) {
@@ -199,11 +183,8 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getMultilineInput()
     getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(
-      buildInputSettings({ serverUrl: expectedUrl })
-    )
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid server_url /)
   })
 
   it('test open state input option', async () => {
@@ -255,9 +236,8 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getMultilineInput()
     getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
-    const inputSettings = await ih.getInputSettings()
-
-    expect(inputSettings).toMatchObject(buildInputSettings({ state: 'all' }))
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid state /)
   })
 
   it('test illegal state input option', async () => {
@@ -274,9 +254,7 @@ describe('get inputs', () => {
     getMultilineInputMock.mockImplementation(getMultilineInputDefault)
 
     expect.assertions(1)
-    await expect(ih.getInputSettings()).rejects.toThrow(
-      /^Invalid request state: /
-    )
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid state /)
   })
 
   it('test single-lined labels input option', async () => {
