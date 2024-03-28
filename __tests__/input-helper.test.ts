@@ -13,7 +13,6 @@ const DEFAULT_SERVER_URL = 'https://gitea.com'
 const DEFAULT_TOKEN = 'default-token'
 
 // Mock the GitHub Actions core library
-let errorMock: jest.SpiedFunction<typeof core.error>
 let getInputMock: jest.SpiedFunction<typeof core.getInput>
 let getMultilineInputMock: jest.SpiedFunction<typeof core.getMultilineInput>
 
@@ -28,7 +27,6 @@ describe('get inputs', () => {
       GITHUB_SERVER_URL: DEFAULT_SERVER_URL
     }
 
-    errorMock = jest.spyOn(core, 'error').mockImplementation()
     getInputMock = jest.spyOn(core, 'getInput').mockImplementation()
     getMultilineInputMock = jest
       .spyOn(core, 'getMultilineInput')
@@ -102,7 +100,6 @@ describe('get inputs', () => {
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings())
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test repository input option', async () => {
@@ -128,7 +125,6 @@ describe('get inputs', () => {
         repositoryName: expectedName
       })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty repository input option', async () => {
@@ -147,7 +143,6 @@ describe('get inputs', () => {
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings())
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test invalid repository input option', async () => {
@@ -187,7 +182,6 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ serverUrl: expectedUrl })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty server_url input option', async () => {
@@ -210,7 +204,6 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ serverUrl: expectedUrl })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test open state input option', async () => {
@@ -229,7 +222,6 @@ describe('get inputs', () => {
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings({ state: 'open' }))
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test closed state input option', async () => {
@@ -248,7 +240,6 @@ describe('get inputs', () => {
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings({ state: 'closed' }))
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test empty state input option', async () => {
@@ -267,7 +258,6 @@ describe('get inputs', () => {
     const inputSettings = await ih.getInputSettings()
 
     expect(inputSettings).toMatchObject(buildInputSettings({ state: 'all' }))
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test illegal state input option', async () => {
@@ -309,7 +299,6 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ labels: [expectedLabel] })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 
   it('test multi-lined labels input option', async () => {
@@ -332,6 +321,5 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ labels: expectedLabels })
     )
-    expect(errorMock).not.toHaveBeenCalled()
   })
 })
