@@ -193,7 +193,7 @@ describe('action', () => {
       getInputSettingsMock.mockImplementation(async () =>
         buildInputSettings({
           milestone: 'v0.10.0',
-          labels: ['kind/feature', '', 'kind/enhancement']
+          labels: ['kind/feature', 'kind/enhancement']
         })
       )
 
