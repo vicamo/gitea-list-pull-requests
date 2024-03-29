@@ -73,7 +73,11 @@ jobs:
             ${{ steps.identity.outputs.is_gitea == 'true' && github.token || ''
             }}
           repository: 'gitea/tea'
+          limit: 1
 
       - name: Print Output
         id: output
-        run: echo '${{ steps.test-action.outputs.json }}'
+        run: |
+          cat <<EOF
+          ${{ steps.test-action.outputs.json }}
+          EOF
