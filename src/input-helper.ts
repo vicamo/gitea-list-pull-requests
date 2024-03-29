@@ -35,6 +35,16 @@ export interface IInputSettings {
    * A multi-line string with one label name for each line
    */
   labels: string[]
+
+  /**
+   * Page number of results to return (1-based)
+   */
+  page: number
+
+  /**
+   * Page size of results
+   */
+  limit: number
 }
 
 export async function getInputSettings(): Promise<IInputSettings> {
@@ -83,6 +93,14 @@ export async function getInputSettings(): Promise<IInputSettings> {
   result.milestone = core.getInput('milestone')
 
   result.labels = core.getMultilineInput('labels')
+
+  const page = core.getInput('page')
+  result.page = page === '' ? 0 : parseInt(page)
+  if (isNaN(result.page)) throw new Error(`Invalid page '${page}'`)
+
+  const limit = core.getInput('limit')
+  result.limit = limit === '' ? 0 : parseInt(limit)
+  if (isNaN(result.limit)) throw new Error(`Invalid limit '${limit}'`)
 
   return result
 }

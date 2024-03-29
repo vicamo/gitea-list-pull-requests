@@ -37,6 +37,8 @@ describe('get inputs', () => {
         return 'all'
       case 'milestone':
       case 'labels':
+      case 'page':
+      case 'limit':
         return ''
       default:
         throw new Error(`Unexpected input: ${name}`)
@@ -61,6 +63,8 @@ describe('get inputs', () => {
       state?: string
       milestone?: string
       labels?: string[]
+      page?: number
+      limit?: number
     } = {}
   ): ih.IInputSettings {
     return {
@@ -74,7 +78,9 @@ describe('get inputs', () => {
       serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
       state: d.state === undefined ? 'all' : d.state,
       milestone: d.milestone === undefined ? '' : d.milestone,
-      labels: d.labels === undefined ? [] : d.labels
+      labels: d.labels === undefined ? [] : d.labels,
+      page: d.page === undefined ? 0 : d.page,
+      limit: d.limit === undefined ? 0 : d.limit
     }
   }
 
@@ -299,5 +305,75 @@ describe('get inputs', () => {
     expect(inputSettings).toMatchObject(
       buildInputSettings({ labels: expectedLabels })
     )
+  })
+
+  it('test page input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'page':
+          return '123'
+        default:
+          return getInputDefault(name)
+      }
+    })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(buildInputSettings({ page: 123 }))
+  })
+
+  it('test invalid page input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'page':
+          return 'not a number'
+        default:
+          return getInputDefault(name)
+      }
+    })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
+
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid page /)
+  })
+
+  it('test limit input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'limit':
+          return '123'
+        default:
+          return getInputDefault(name)
+      }
+    })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
+
+    const inputSettings = await ih.getInputSettings()
+
+    expect(inputSettings).toMatchObject(buildInputSettings({ limit: 123 }))
+  })
+
+  it('test invalid limit input option', async () => {
+    // Set the action's inputs as return values from core.getInput()
+    getInputMock.mockImplementation(name => {
+      switch (name) {
+        case 'limit':
+          return 'not a number'
+        default:
+          return getInputDefault(name)
+      }
+    })
+    // Set the action's inputs as return values from core.getMultilineInput()
+    getMultilineInputMock.mockImplementation(getMultilineInputDefault)
+
+    expect.assertions(1)
+    await expect(ih.getInputSettings()).rejects.toThrow(/^Invalid limit /)
   })
 })

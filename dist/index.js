@@ -30381,6 +30381,14 @@ async function getInputSettings() {
     }
     result.milestone = core.getInput('milestone');
     result.labels = core.getMultilineInput('labels');
+    const page = core.getInput('page');
+    result.page = page === '' ? 0 : parseInt(page);
+    if (isNaN(result.page))
+        throw new Error(`Invalid page '${page}'`);
+    const limit = core.getInput('limit');
+    result.limit = limit === '' ? 0 : parseInt(limit);
+    if (isNaN(result.limit))
+        throw new Error(`Invalid limit '${limit}'`);
     return result;
 }
 exports.getInputSettings = getInputSettings;
@@ -30461,6 +30469,10 @@ async function run() {
                 throw new Error(`No such label '${label}' found.`);
             });
         }
+        if (inputSettings.page > 0)
+            query.page = inputSettings.page;
+        if (inputSettings.limit > 0)
+            query.limit = inputSettings.limit;
         const resp = await api.repos.repoListPullRequests(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, query);
         // Set outputs for other workflow steps to use
         core.setOutput('json', JSON.stringify(resp.data));
