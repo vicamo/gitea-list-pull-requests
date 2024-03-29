@@ -48,6 +48,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Am I on Gitea?
+        id: identity
+        run: |
+          echo "is_gitea=${{ contains(github.server_url, 'gitea') && 'true' || 'false' }}" | \
+              tee -a "${GITHUB_OUTPUT}"
+
       - name: Checkout
         id: checkout
         uses: actions/checkout@v4
@@ -61,6 +67,12 @@ jobs:
       - name: Test Local Action
         id: test-action
         uses: ./
+        with:
+          server_url: http://gitea.com
+          token:
+            ${{ steps.identity.outputs.is_gitea == 'true' && github.token || ''
+            }}
+          repository: 'gitea/tea'
 
       - name: Print Output
         id: output
