@@ -38,6 +38,12 @@ inputs:
       A multi-line string with one label name for each line. If any of the
       specified label is not available for the specified project, it will return
       an error.
+  page:
+    description: >
+      Page number of results to return (1-based).
+  limit:
+    description: >
+      Page size of results.
 
 outputs:
   json:

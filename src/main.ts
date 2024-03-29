@@ -53,6 +53,10 @@ export async function run(): Promise<void> {
       })
     }
 
+    if (inputSettings.page > 0) query.page = inputSettings.page
+
+    if (inputSettings.limit > 0) query.limit = inputSettings.limit
+
     const resp = await api.repos.repoListPullRequests(
       `${inputSettings.repositoryOwner}`,
       `${inputSettings.repositoryName}`,

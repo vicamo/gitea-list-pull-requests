@@ -56,6 +56,12 @@ Gitea action that lists pull requests with filtering conditions.
     #
     # Default: ''
     labels: ''
+
+    # Page number of results to return (1-based).
+    page: ''
+
+    # Page size of results.
+    limit: ''
 ```
 
 <!-- end usage -->
@@ -74,6 +80,8 @@ The following inputs can be used as `step.with` keys:
 | `state`      | String            | `all`                      | State of pull request, e.g. open, closed, or all.      |
 | `milestone`  | String            |                            | A project milestone name.                              |
 | `labels`     | Multi-line String |                            | A multi-line string with one label name for each line. |
+| `page`       | Number            |                            | Page number of results to return (1-based).            |
+| `limit`      | Number            |                            | Page size of results.                                  |
 
 ### outputs
 

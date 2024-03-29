@@ -48,6 +48,8 @@ describe('action', () => {
       state?: string
       milestone?: string
       labels?: string[]
+      page?: number
+      limit?: number
     } = {}
   ): ih.IInputSettings {
     return {
@@ -61,7 +63,9 @@ describe('action', () => {
       serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
       state: d.state === undefined ? 'all' : d.state,
       milestone: d.milestone === undefined ? '' : d.milestone,
-      labels: d.labels === undefined ? [] : d.labels
+      labels: d.labels === undefined ? [] : d.labels,
+      page: d.page === undefined ? 0 : d.page,
+      limit: d.limit === undefined ? 0 : d.limit
     }
   }
 
@@ -236,6 +240,23 @@ describe('action', () => {
       expect(runMock).toHaveReturned()
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
+    },
+    TIMEOUT_SECONDS * 1000
+  )
+
+  it(
+    'invoked with page/limit',
+    async () => {
+      // Set the action's inputs as return values from ih.getInputSettings()
+      getInputSettingsMock.mockImplementation(async () =>
+        buildInputSettings({ page: 1, limit: 1 })
+      )
+
+      await main.run()
+
+      expect(runMock).toHaveReturned()
+      expect(setOutputMock).toHaveBeenCalled()
+      expect(setFailedMock).not.toHaveBeenCalled()
     },
     TIMEOUT_SECONDS * 1000
   )
