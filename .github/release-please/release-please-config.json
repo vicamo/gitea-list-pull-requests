@@ -22,8 +22,12 @@
       "type": "chore"
     },
     {
-      "section": "🧰 Maintenance",
+      "section": "🧰 Testing",
       "type": "ci"
+    },
+    {
+      "section": "🧰 Testing",
+      "type": "tests"
     },
     {
       "section": "🧰 Maintenance",
