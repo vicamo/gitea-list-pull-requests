@@ -1,263 +1,93 @@
 /**
  * Unit tests for the action's main functionality, src/main.ts
- *
- * These should be run as if the action was called from a workflow.
- * Specifically, the inputs listed in `action.yml` should be set as environment
- * variables following the pattern `INPUT_<INPUT_NAME>`.
  */
 
 import * as core from '@actions/core'
+import * as gitea from 'gitea-js'
 import * as ih from '../src/input-helper'
+import * as imp from '../src/implement'
 import * as main from '../src/main'
+import * as u from './utils'
 
-const DEFAULT_REPO_OWNER = 'gitea'
-const DEFAULT_REPO_NAME = 'tea'
-const DEFAULT_SERVER_URL = 'https://gitea.com'
+describe('run', () => {
+  // Mock the action's main function
+  const runMock = jest.spyOn(main, 'run')
 
-const TIMEOUT_ERROR_SECONDS = 10
-const TIMEOUT_SECONDS = 60
+  // Mock the GitHub Actions core library
+  let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
+  let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
 
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run')
+  let getInputSettingsMock: jest.SpiedFunction<typeof ih.getInputSettings>
+  let getPullRequestsMock: jest.SpiedFunction<typeof imp.getPullRequests>
 
-// Other utilities
-const reqArrayRegex = /^\[.*\]$/
+  type PullRequests = Awaited<ReturnType<typeof imp.getPullRequests>>
 
-// Mock the GitHub Actions core library
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
-let getInputSettingsMock: jest.SpiedFunction<typeof ih.getInputSettings>
-
-describe('action', () => {
   beforeEach(() => {
     jest.clearAllMocks()
 
     setOutputMock = jest.spyOn(core, 'setOutput').mockImplementation()
     setFailedMock = jest.spyOn(core, 'setFailed').mockImplementation()
-    getInputSettingsMock = jest
-      .spyOn(ih, 'getInputSettings')
-      .mockImplementation()
+    getPullRequestsMock = jest.spyOn(imp, 'getPullRequests')
+    getInputSettingsMock = jest.spyOn(ih, 'getInputSettings')
   })
 
-  function buildInputSettings(
-    d: {
-      repositoryOwner?: string
-      repositoryName?: string
-      token?: string
-      serverUrl?: string
-      state?: 'closed' | 'open' | 'all'
-      milestone?: string
-      labels?: string[]
-      page?: number
-      limit?: number
-    } = {}
-  ): ih.IInputSettings {
-    return {
-      repositoryOwner:
-        d.repositoryOwner === undefined
-          ? DEFAULT_REPO_OWNER
-          : d.repositoryOwner,
-      repositoryName:
-        d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
-      token: d.token === undefined ? '' : d.token,
-      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
-      state: d.state === undefined ? 'all' : d.state,
-      milestone: d.milestone === undefined ? '' : d.milestone,
-      labels: d.labels === undefined ? [] : d.labels,
-      page: d.page === undefined ? 0 : d.page,
-      limit: d.limit === undefined ? 0 : d.limit
-    }
-  }
+  it('invoked with all default inputs', async () => {
+    const inputSettings = u.buildInputSettings()
+    const expectedPRs: PullRequests = []
 
-  it(
-    'invoked with all default inputs',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => buildInputSettings())
+    getInputSettingsMock.mockImplementation(async () => inputSettings)
+    getPullRequestsMock.mockImplementation(async () => expectedPRs)
 
-      await main.run()
+    await main.run()
 
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenNthCalledWith(
-        1,
-        'json',
-        expect.stringMatching(reqArrayRegex)
-      )
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
+    expect(runMock).toHaveReturned()
+    expect(getInputSettingsMock).toHaveBeenCalledTimes(1)
+    expect(getPullRequestsMock).toHaveBeenCalledTimes(1)
+    expect(setOutputMock).toHaveBeenCalledWith(
+      'json',
+      JSON.stringify(expectedPRs)
+    )
+    expect(setFailedMock).not.toHaveBeenCalled()
+  })
 
-  it(
-    'invoked with invalid repo owner/name',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ repositoryOwner: 'a', repositoryName: 'b' })
-      )
+  it('throw Error in getPullRequests', async () => {
+    const inputSettings = u.buildInputSettings()
+    const expectedMessage = 'An Error'
 
-      await main.run()
+    getInputSettingsMock.mockImplementation(async () => inputSettings)
+    getPullRequestsMock.mockImplementation(async () => {
+      throw new Error(expectedMessage)
+    })
 
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).toHaveBeenCalled()
-    },
-    TIMEOUT_ERROR_SECONDS * 1000
-  )
+    await main.run()
 
-  it(
-    'invoked with an invalid token',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ token: 'invalid_token' })
-      )
+    expect(runMock).toHaveReturned()
+    expect(getInputSettingsMock).toHaveBeenCalledTimes(1)
+    expect(getPullRequestsMock).toHaveBeenCalledTimes(1)
+    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(setFailedMock).toHaveBeenCalledWith(expectedMessage)
+  })
 
-      await main.run()
+  it('throw non-Error in getPullRequests', async () => {
+    const inputSettings = u.buildInputSettings()
+    const api = gitea.giteaApi(inputSettings.serverUrl, {
+      token: inputSettings.token
+    })
+    type PRResponse = Awaited<ReturnType<typeof api.repos.repoListPullRequests>>
 
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
+    getInputSettingsMock.mockImplementation(async () => inputSettings)
+    getPullRequestsMock.mockImplementation(async () => {
+      const resp = {} as PRResponse
+      resp.error = { message: 'A failure' }
+      throw resp
+    })
 
-  it(
-    'invoked with an invalid server_url',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ serverUrl: 'an invalid url' })
-      )
+    await main.run()
 
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).toHaveBeenCalled()
-    },
-    TIMEOUT_ERROR_SECONDS * 1000
-  )
-
-  it(
-    'invoked with open state',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ state: 'open' })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with closed state',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ state: 'closed' })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with an invalid milestone',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ milestone: 'no such milestone' })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with milestone and labels',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({
-          milestone: 'v0.10.0',
-          labels: ['kind/feature', 'kind/enhancement']
-        })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with a single-lined label',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ labels: ['kind/bug'] })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with an invalid label',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ labels: ['no such label'] })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).not.toHaveBeenCalled()
-      expect(setFailedMock).toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
-
-  it(
-    'invoked with page/limit',
-    async () => {
-      // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ page: 1, limit: 1 })
-      )
-
-      await main.run()
-
-      expect(runMock).toHaveReturned()
-      expect(setOutputMock).toHaveBeenCalled()
-      expect(setFailedMock).not.toHaveBeenCalled()
-    },
-    TIMEOUT_SECONDS * 1000
-  )
+    expect(runMock).toHaveReturned()
+    expect(getInputSettingsMock).toHaveBeenCalledTimes(1)
+    expect(getPullRequestsMock).toHaveBeenCalledTimes(1)
+    expect(setOutputMock).not.toHaveBeenCalled()
+    expect(setFailedMock).toHaveBeenCalledWith('Failed to fetch pull requests')
+  })
 })
