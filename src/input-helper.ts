@@ -24,7 +24,7 @@ export interface IInputSettings {
   /**
    * State of pull request
    */
-  state: string
+  state: 'closed' | 'open' | 'all'
 
   /**
    * A project milestone name
