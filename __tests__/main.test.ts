@@ -9,26 +9,17 @@
 import * as core from '@actions/core'
 import * as ih from '../src/input-helper'
 import * as main from '../src/main'
-
-const DEFAULT_REPO_OWNER = 'gitea'
-const DEFAULT_REPO_NAME = 'tea'
-const DEFAULT_SERVER_URL = 'https://gitea.com'
-
-const TIMEOUT_ERROR_SECONDS = 10
-const TIMEOUT_SECONDS = 60
-
-// Mock the action's main function
-const runMock = jest.spyOn(main, 'run')
-
-// Other utilities
-const reqArrayRegex = /^\[.*\]$/
-
-// Mock the GitHub Actions core library
-let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
-let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
-let getInputSettingsMock: jest.SpiedFunction<typeof ih.getInputSettings>
+import * as u from './utils'
 
 describe('action', () => {
+  // Mock the action's main function
+  const runMock = jest.spyOn(main, 'run')
+
+  // Mock the GitHub Actions core library
+  let setFailedMock: jest.SpiedFunction<typeof core.setFailed>
+  let setOutputMock: jest.SpiedFunction<typeof core.setOutput>
+  let getInputSettingsMock: jest.SpiedFunction<typeof ih.getInputSettings>
+
   beforeEach(() => {
     jest.clearAllMocks()
 
@@ -39,41 +30,13 @@ describe('action', () => {
       .mockImplementation()
   })
 
-  function buildInputSettings(
-    d: {
-      repositoryOwner?: string
-      repositoryName?: string
-      token?: string
-      serverUrl?: string
-      state?: 'closed' | 'open' | 'all'
-      milestone?: string
-      labels?: string[]
-      page?: number
-      limit?: number
-    } = {}
-  ): ih.IInputSettings {
-    return {
-      repositoryOwner:
-        d.repositoryOwner === undefined
-          ? DEFAULT_REPO_OWNER
-          : d.repositoryOwner,
-      repositoryName:
-        d.repositoryName === undefined ? DEFAULT_REPO_NAME : d.repositoryName,
-      token: d.token === undefined ? '' : d.token,
-      serverUrl: d.serverUrl === undefined ? DEFAULT_SERVER_URL : d.serverUrl,
-      state: d.state === undefined ? 'all' : d.state,
-      milestone: d.milestone === undefined ? '' : d.milestone,
-      labels: d.labels === undefined ? [] : d.labels,
-      page: d.page === undefined ? 0 : d.page,
-      limit: d.limit === undefined ? 0 : d.limit
-    }
-  }
-
   it(
     'invoked with all default inputs',
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
-      getInputSettingsMock.mockImplementation(async () => buildInputSettings())
+      getInputSettingsMock.mockImplementation(async () =>
+        u.buildInputSettings({ token: '' })
+      )
 
       await main.run()
 
@@ -81,11 +44,11 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenNthCalledWith(
         1,
         'json',
-        expect.stringMatching(reqArrayRegex)
+        expect.stringMatching(/^\[.*\]$/)
       )
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -93,7 +56,11 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ repositoryOwner: 'a', repositoryName: 'b' })
+        u.buildInputSettings({
+          repositoryOwner: 'a',
+          repositoryName: 'b',
+          token: ''
+        })
       )
 
       await main.run()
@@ -102,7 +69,7 @@ describe('action', () => {
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
     },
-    TIMEOUT_ERROR_SECONDS * 1000
+    u.TIMEOUT_ERROR_SECONDS * 1000
   )
 
   it(
@@ -110,7 +77,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ token: 'invalid_token' })
+        u.buildInputSettings({ token: 'invalid_token' })
       )
 
       await main.run()
@@ -119,7 +86,7 @@ describe('action', () => {
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -127,7 +94,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ serverUrl: 'an invalid url' })
+        u.buildInputSettings({ token: '', serverUrl: 'an invalid url' })
       )
 
       await main.run()
@@ -136,7 +103,7 @@ describe('action', () => {
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
     },
-    TIMEOUT_ERROR_SECONDS * 1000
+    u.TIMEOUT_ERROR_SECONDS * 1000
   )
 
   it(
@@ -144,7 +111,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ state: 'open' })
+        u.buildInputSettings({ token: '', state: 'open' })
       )
 
       await main.run()
@@ -153,7 +120,7 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -161,7 +128,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ state: 'closed' })
+        u.buildInputSettings({ token: '', state: 'closed' })
       )
 
       await main.run()
@@ -170,7 +137,7 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -178,7 +145,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ milestone: 'no such milestone' })
+        u.buildInputSettings({ token: '', milestone: 'no such milestone' })
       )
 
       await main.run()
@@ -187,7 +154,7 @@ describe('action', () => {
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -195,7 +162,8 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({
+        u.buildInputSettings({
+          token: '',
           milestone: 'v0.10.0',
           labels: ['kind/feature', 'kind/enhancement']
         })
@@ -207,7 +175,7 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -215,7 +183,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ labels: ['kind/bug'] })
+        u.buildInputSettings({ token: '', labels: ['kind/bug'] })
       )
 
       await main.run()
@@ -224,7 +192,7 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -232,7 +200,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ labels: ['no such label'] })
+        u.buildInputSettings({ token: '', labels: ['no such label'] })
       )
 
       await main.run()
@@ -241,7 +209,7 @@ describe('action', () => {
       expect(setOutputMock).not.toHaveBeenCalled()
       expect(setFailedMock).toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 
   it(
@@ -249,7 +217,7 @@ describe('action', () => {
     async () => {
       // Set the action's inputs as return values from ih.getInputSettings()
       getInputSettingsMock.mockImplementation(async () =>
-        buildInputSettings({ page: 1, limit: 1 })
+        u.buildInputSettings({ token: '', page: 1, limit: 1 })
       )
 
       await main.run()
@@ -258,6 +226,6 @@ describe('action', () => {
       expect(setOutputMock).toHaveBeenCalled()
       expect(setFailedMock).not.toHaveBeenCalled()
     },
-    TIMEOUT_SECONDS * 1000
+    u.TIMEOUT_SECONDS * 1000
   )
 })
