@@ -30439,18 +30439,9 @@ async function run() {
         const api = gitea.giteaApi(`${inputSettings.serverUrl}`, {
             token: inputSettings.token
         });
-        const query = {};
-        switch (inputSettings.state) {
-            case 'all':
-                query.state = 'all';
-                break;
-            case 'open':
-                query.state = 'open';
-                break;
-            case 'closed':
-                query.state = 'closed';
-                break;
-        }
+        const query = {
+            state: inputSettings.state
+        };
         if (inputSettings.milestone.length) {
             const resp = await api.repos.issueGetMilestonesList(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, { state: 'all', name: inputSettings.milestone });
             const milestones = resp.data;

@@ -60,7 +60,7 @@ describe('get inputs', () => {
       repositoryName?: string
       token?: string
       serverUrl?: string
-      state?: string
+      state?: 'closed' | 'open' | 'all'
       milestone?: string
       labels?: string[]
       page?: number

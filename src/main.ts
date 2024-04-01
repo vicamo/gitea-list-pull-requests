@@ -13,17 +13,8 @@ export async function run(): Promise<void> {
       token: inputSettings.token
     })
 
-    const query: Parameters<typeof api.repos.repoListPullRequests>[2] = {}
-    switch (inputSettings.state) {
-      case 'all':
-        query.state = 'all'
-        break
-      case 'open':
-        query.state = 'open'
-        break
-      case 'closed':
-        query.state = 'closed'
-        break
+    const query: Parameters<typeof api.repos.repoListPullRequests>[2] = {
+      state: inputSettings.state
     }
 
     if (inputSettings.milestone.length) {
