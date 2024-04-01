@@ -30425,10 +30425,40 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.run = exports.getPullRequests = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const ih = __importStar(__nccwpck_require__(6455));
 const gitea = __importStar(__nccwpck_require__(6814));
+async function getPullRequests(api, inputSettings) {
+    const query = {
+        state: inputSettings.state
+    };
+    if (inputSettings.milestone.length) {
+        const resp = await api.repos.issueGetMilestonesList(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, { state: 'all', name: inputSettings.milestone });
+        const milestones = resp.data;
+        if (milestones.length === 0)
+            throw new Error(`No such milestone '${inputSettings.milestone}' found.`);
+        else
+            query.milestone = milestones[0].id;
+    }
+    if (inputSettings.labels.length) {
+        const resp = await api.repos.issueListLabels(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`);
+        query.labels = inputSettings.labels.map(label => {
+            for (const result of resp.data) {
+                if (result.name === label)
+                    return result.id;
+            }
+            throw new Error(`No such label '${label}' found.`);
+        });
+    }
+    if (inputSettings.page > 0)
+        query.page = inputSettings.page;
+    if (inputSettings.limit > 0)
+        query.limit = inputSettings.limit;
+    const resp = await api.repos.repoListPullRequests(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, query);
+    return resp.data;
+}
+exports.getPullRequests = getPullRequests;
 /**
  * The main function for the action.
  * @returns {Promise<void>} Resolves when the action is complete.
@@ -30439,34 +30469,8 @@ async function run() {
         const api = gitea.giteaApi(`${inputSettings.serverUrl}`, {
             token: inputSettings.token
         });
-        const query = {
-            state: inputSettings.state
-        };
-        if (inputSettings.milestone.length) {
-            const resp = await api.repos.issueGetMilestonesList(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, { state: 'all', name: inputSettings.milestone });
-            const milestones = resp.data;
-            if (milestones.length === 0)
-                throw new Error(`No such milestone '${inputSettings.milestone}' found.`);
-            else
-                query.milestone = milestones[0].id;
-        }
-        if (inputSettings.labels.length) {
-            const resp = await api.repos.issueListLabels(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`);
-            query.labels = inputSettings.labels.map(label => {
-                for (const result of resp.data) {
-                    if (result.name === label)
-                        return result.id;
-                }
-                throw new Error(`No such label '${label}' found.`);
-            });
-        }
-        if (inputSettings.page > 0)
-            query.page = inputSettings.page;
-        if (inputSettings.limit > 0)
-            query.limit = inputSettings.limit;
-        const resp = await api.repos.repoListPullRequests(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, query);
         // Set outputs for other workflow steps to use
-        core.setOutput('json', JSON.stringify(resp.data));
+        core.setOutput('json', JSON.stringify(await getPullRequests(api, inputSettings)));
     }
     catch (error) {
         // Fail the workflow run if an error occurs
