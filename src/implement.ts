@@ -15,10 +15,8 @@ export async function getPullRequests(
       `${inputSettings.repositoryName}`,
       { state: 'all', name: inputSettings.milestone }
     )
-    const milestones = resp.data
-    if (milestones.length === 0)
-      throw new Error(`No such milestone '${inputSettings.milestone}' found.`)
-    else query.milestone = milestones[0].id
+    if (resp.error) throw new Error(resp.error.message)
+    query.milestone = resp.data[0].id
   }
 
   if (inputSettings.labels.length) {
@@ -26,12 +24,11 @@ export async function getPullRequests(
       `${inputSettings.repositoryOwner}`,
       `${inputSettings.repositoryName}`
     )
-
+    if (resp.error) throw new Error(resp.error.message)
     query.labels = inputSettings.labels.map(label => {
       for (const result of resp.data) {
         if (result.name === label) return result.id as number
       }
-
       throw new Error(`No such label '${label}' found.`)
     })
   }
