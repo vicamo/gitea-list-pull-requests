@@ -2,6 +2,13 @@
 
 # Changelog
 
+## [1.0.3](https://github.com/vicamo/gitea-actions-template/compare/v1.0.2...v1.0.3) (2024-04-01)
+
+### 🧰 Testing
+
+- release-please: move ci/tests to Testing section
+  ([a03135e](https://github.com/vicamo/gitea-actions-template/commit/a03135e9c24df56368ad1e62ebbac0c985abb61f))
+
 ## [1.0.2](https://github.com/vicamo/gitea-actions-template/compare/v1.0.1...v1.0.2) (2024-03-27)
 
 ### 🧰 Maintenance
