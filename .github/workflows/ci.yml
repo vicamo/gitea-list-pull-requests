@@ -46,6 +46,22 @@ jobs:
   test-action:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - limit: 1
+            state: 'open'
+          - limit: 1
+            milestone: 'v0.10.0'
+            labels: 'kind/feature'
+          - limit: 1
+            labels: |
+              kind/bug
+              kind/docs
+
+              kind/enhancement
+          - page: 2
+            limit: 2
 
     steps:
       - name: Am I on Gitea?
@@ -73,7 +89,11 @@ jobs:
             ${{ steps.identity.outputs.is_gitea == 'true' && github.token || ''
             }}
           repository: 'gitea/tea'
-          limit: 1
+          state: ${{ matrix.state || 'all' }}
+          milestone: ${{ matrix.milestone }}
+          labels: ${{ matrix.labels }}
+          page: ${{ matrix.page }}
+          limit: ${{ matrix.limit }}
 
       - name: Print Output
         id: output
