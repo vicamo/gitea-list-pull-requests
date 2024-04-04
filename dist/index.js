@@ -30390,7 +30390,6 @@ async function getInputSettings() {
     const result = {};
     // Qualified repository
     const qualifiedRepository = core.getInput('repository');
-    core.debug(`qualified repository = '${qualifiedRepository}'`);
     const splitRepository = qualifiedRepository.split('/');
     if (splitRepository.length !== 2 ||
         !splitRepository[0] ||
@@ -30403,7 +30402,6 @@ async function getInputSettings() {
     result.token = core.getInput('token');
     // Determine the GitHub URL that the repository is being hosted from
     result.serverUrl = core.getInput('server_url');
-    core.debug(`Gitea server URL = ${result.serverUrl}`);
     if (!result.serverUrl)
         throw new Error(`Invalid server_url '${result.serverUrl}'`);
     const state = core.getInput('state');
