@@ -13,7 +13,7 @@ Gitea action that lists pull requests with filtering conditions.
 <!-- start usage -->
 
 ```yaml
-- uses: vicamo/gitea-list-pull-requests@main
+- uses: vicamo/gitea-list-pull-requests@v1
   with:
     # Repository name with owner. For example,
     # vicamo/gitea-list-pull-requests
@@ -101,13 +101,13 @@ The following outputs are available:
 ### List all pull requests of current repository
 
 ```yaml
-- uses: vicamo/gitea-list-pull-requests@main
+- uses: vicamo/gitea-list-pull-requests@v1
 ```
 
 ### List all pull requests of a different repository of a remote server
 
 ```yaml
-- uses: vicamo/gitea-list-pull-requests@main
+- uses: vicamo/gitea-list-pull-requests@v1
   with:
     server_url: 'https://gitea.com'
     repository: 'gitea/awesome-gitea'
@@ -116,7 +116,7 @@ The following outputs are available:
 ### Additional filters for interested pull requests
 
 ```yaml
-- uses: vicamo/gitea-list-pull-requests@main
+- uses: vicamo/gitea-list-pull-requests@v1
   with:
     state: 'open'
     milestone: 'v1.0.0'
@@ -128,7 +128,7 @@ The following outputs are available:
 ### Pagination
 
 ```yaml
-- uses: vicamo/gitea-list-pull-requests@main
+- uses: vicamo/gitea-list-pull-requests@v1
   with:
     page: 2
     limit: 10
