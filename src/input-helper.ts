@@ -52,7 +52,6 @@ export async function getInputSettings(): Promise<IInputSettings> {
 
   // Qualified repository
   const qualifiedRepository = core.getInput('repository')
-  core.debug(`qualified repository = '${qualifiedRepository}'`)
   const splitRepository = qualifiedRepository.split('/')
   if (
     splitRepository.length !== 2 ||
@@ -71,7 +70,6 @@ export async function getInputSettings(): Promise<IInputSettings> {
 
   // Determine the GitHub URL that the repository is being hosted from
   result.serverUrl = core.getInput('server_url')
-  core.debug(`Gitea server URL = ${result.serverUrl}`)
   if (!result.serverUrl)
     throw new Error(`Invalid server_url '${result.serverUrl}'`)
 

@@ -59,7 +59,6 @@ describe('getPullRequests', () => {
     listPullRequestsMock.mockImplementation(async () => {
       const resp = {} as PRResponse
       resp.error = { message: 'Throws in repoListPullRequests.' }
-      console.log(resp.error.message)
       throw resp
     })
 
