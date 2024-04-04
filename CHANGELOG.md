@@ -2,6 +2,15 @@
 
 # Changelog
 
+## [1.0.4](https://github.com/vicamo/gitea-actions-template/compare/v1.0.3...v1.0.4) (2024-04-04)
+
+### 🧰 Maintenance
+
+- add a super-lint npm run target
+  ([f2fc840](https://github.com/vicamo/gitea-actions-template/commit/f2fc840afa72c45157cab8a3b85601303cbc63e8))
+- **deps-dev:** bump the npm-development group with 1 update
+  ([014cf1a](https://github.com/vicamo/gitea-actions-template/commit/014cf1a6f6af6d1ffbc6ee4799cc6a3eff8321d9))
+
 ## [1.0.3](https://github.com/vicamo/gitea-actions-template/compare/v1.0.2...v1.0.3) (2024-04-01)
 
 ### 🧰 Testing
