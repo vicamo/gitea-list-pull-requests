@@ -32,6 +32,8 @@
     "lint": "npx eslint . -c ./.github/linters/.eslintrc.yml",
     "package": "npx ncc build src/index.ts -o dist --source-map --license licenses.txt",
     "package:watch": "npm run package -- --watch",
+    "super-lint": "docker run --rm --env-file .github/linters/super-linter.env -e DEFAULT_BRANCH=HEAD -e RUN_LOCAL=true -v .:/tmp/lint ghcr.io/super-linter/super-linter:latest",
+    "super-lint:debug": "docker run --rm --env-file .github/linters/super-linter.env -e DEFAULT_BRANCH=HEAD -e RUN_LOCAL=true -e LOG_LEVEL=DEBUG -v .:/tmp/lint ghcr.io/super-linter/super-linter:latest",
     "test": "npx jest",
     "all": "npm run format:write && npm run lint && npm run test && npm run coverage && npm run package"
   },
