@@ -94,7 +94,9 @@ The following outputs are available:
 ## Scenarios
 
 - [List all pull requests of current repository](#list-all-pull-requests-of-current-repository)
-- [List all pull requests of a different repository](#list-all-pull-requests-of-a-different-repository)
+- [List all pull requests of a different repository of a remote server](#list-all-pull-requests-of-a-different-repository-of-a-remote-server)
+- [Additional filters for interested pull requests](#additional-filters-for-interested-pull-requests)
+- [Pagination](#pagination)
 
 ### List all pull requests of current repository
 
@@ -102,12 +104,34 @@ The following outputs are available:
 - uses: vicamo/gitea-list-pull-requests@main
 ```
 
-### List all pull requests of a different repository
+### List all pull requests of a different repository of a remote server
 
 ```yaml
 - uses: vicamo/gitea-list-pull-requests@main
   with:
+    server_url: 'https://gitea.com'
     repository: 'gitea/awesome-gitea'
+```
+
+### Additional filters for interested pull requests
+
+```yaml
+- uses: vicamo/gitea-list-pull-requests@main
+  with:
+    state: 'open'
+    milestone: 'v1.0.0'
+    labels: |
+      kind/bug
+      kind/feature
+```
+
+### Pagination
+
+```yaml
+- uses: vicamo/gitea-list-pull-requests@main
+  with:
+    page: 2
+    limit: 10
 ```
 
 ## License
