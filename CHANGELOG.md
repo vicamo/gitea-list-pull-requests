@@ -2,6 +2,15 @@
 
 # Changelog
 
+## [1.0.1](https://github.com/vicamo/gitea-list-pull-requests/compare/v1.0.0...v1.0.1) (2024-04-23)
+
+
+### 🧰 Maintenance
+
+* **deps-dev:** bump eslint-plugin-jest from 27.9.0 to 28.2.0 ([2fa558b](https://github.com/vicamo/gitea-list-pull-requests/commit/2fa558b369f46b617b620aedf19f24d2606cf5ee))
+* **deps-dev:** bump the npm-development group with 2 updates ([887867f](https://github.com/vicamo/gitea-list-pull-requests/commit/887867fa06810c4b8bf51a061b57b0539202cf75))
+* **deps-dev:** bump the npm-development group with 5 updates ([0b9cdb4](https://github.com/vicamo/gitea-list-pull-requests/commit/0b9cdb4ac9e256776d871532ab5fe4cf6b63624b))
+
 ## 1.0.0 (2024-04-04)
 
 ### 🚀 Features
