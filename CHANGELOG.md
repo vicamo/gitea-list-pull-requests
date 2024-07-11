@@ -2,6 +2,22 @@
 
 # Changelog
 
+## [1.0.5](https://github.com/vicamo/gitea-actions-template/compare/v1.0.4...v1.0.5) (2024-07-11)
+
+### 🐛 Bugfixes
+
+- move to googleapis/release-please-action
+  ([5dfc88b](https://github.com/vicamo/gitea-actions-template/commit/5dfc88bdd19064c27137caf33e698552e534e2a0))
+
+### 🧰 Maintenance
+
+- **deps-dev:** bump eslint-plugin-jest from 27.9.0 to 28.2.0
+  ([ae263cf](https://github.com/vicamo/gitea-actions-template/commit/ae263cff079cbcdce1f5736189d4a78ee3162e69))
+- **deps-dev:** bump the npm-development group across 1 directory with 4 updates
+  ([92fb379](https://github.com/vicamo/gitea-actions-template/commit/92fb37934dfe3bab34bbeee62fdc688b1ee0cc6b))
+- **deps-dev:** bump the npm-development group with 5 updates
+  ([5fc6de3](https://github.com/vicamo/gitea-actions-template/commit/5fc6de3b6855c8fa34eabfce54133f15cd503429))
+
 ## [1.0.4](https://github.com/vicamo/gitea-actions-template/compare/v1.0.3...v1.0.4) (2024-04-04)
 
 ### 🧰 Maintenance

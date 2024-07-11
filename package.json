@@ -1,7 +1,7 @@
 {
   "name": "gitea-actions-template",
   "description": "Gitea Actions template",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "",
   "private": true,
   "homepage": "https://gitea.com/vicamo/gitea-actions-template",
