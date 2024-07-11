@@ -40,7 +40,7 @@
 
 - bump up Node.js to v16
   ([b8a5078](https://github.com/vicamo/gitea-actions-template/commit/b8a50788a5e60adb83f66ceb9c1e4e7874faffc6))
-- fixes jest globals type error
+- fixes Jest globals type error
   ([922b4cb](https://github.com/vicamo/gitea-actions-template/commit/922b4cbaff78add83dbff45932d07b95795c5ab6))
 - support unknown catch variable
   ([#377](https://github.com/vicamo/gitea-actions-template/issues/377))
@@ -90,9 +90,9 @@
   ([cb934d9](https://github.com/vicamo/gitea-actions-template/commit/cb934d9c3c78984098256ec65ef5b54a984c00c6))
 - add a customizing section for input/output parameters
   ([e761e8d](https://github.com/vicamo/gitea-actions-template/commit/e761e8de8b4682e0b8c2b5e0e1870e050a9a8868))
-- add common README content
+- add common readme content
   ([1ab69ff](https://github.com/vicamo/gitea-actions-template/commit/1ab69ff6db48adf09991d6a5ad9db12d1711395b))
-- complete README usage section with inputs info
+- complete readme usage section with inputs info
   ([666c2c0](https://github.com/vicamo/gitea-actions-template/commit/666c2c04705d1c90dd3e8264417d54a30d775fc8))
 - fix rendering of warning in README.md
   ([3cb2651](https://github.com/vicamo/gitea-actions-template/commit/3cb265137cf5bf0e5fad222b3ba29b4b8b7b491d))
