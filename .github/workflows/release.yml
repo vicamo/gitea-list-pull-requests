@@ -16,7 +16,7 @@ jobs:
     env:
       NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
     steps:
-      - uses: google-github-actions/release-please-action@v4
+      - uses: googleapis/release-please-action@v4
         id: rp
         with:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}

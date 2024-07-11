@@ -30320,7 +30320,7 @@ exports["default"] = _default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getPullRequests = void 0;
+exports.getPullRequests = getPullRequests;
 async function getPullRequests(api, inputSettings) {
     const query = {
         state: inputSettings.state
@@ -30350,7 +30350,6 @@ async function getPullRequests(api, inputSettings) {
     const resp = await api.repos.repoListPullRequests(`${inputSettings.repositoryOwner}`, `${inputSettings.repositoryName}`, query);
     return resp.data;
 }
-exports.getPullRequests = getPullRequests;
 
 
 /***/ }),
@@ -30384,7 +30383,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputSettings = void 0;
+exports.getInputSettings = getInputSettings;
 const core = __importStar(__nccwpck_require__(2186));
 async function getInputSettings() {
     const result = {};
@@ -30430,7 +30429,6 @@ async function getInputSettings() {
         throw new Error(`Invalid limit '${limit}'`);
     return result;
 }
-exports.getInputSettings = getInputSettings;
 
 
 /***/ }),
@@ -30464,7 +30462,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.run = void 0;
+exports.run = run;
 const core = __importStar(__nccwpck_require__(2186));
 const ih = __importStar(__nccwpck_require__(6455));
 const imp = __importStar(__nccwpck_require__(8672));
@@ -30491,7 +30489,6 @@ async function run() {
             core.setFailed('Failed to fetch pull requests');
     }
 }
-exports.run = run;
 
 
 /***/ }),
