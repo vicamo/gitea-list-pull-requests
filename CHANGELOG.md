@@ -66,7 +66,7 @@
 
 ### 🧰 Documentation
 
-- correct README badge links
+- correct readme badge links
   ([452312d](https://github.com/vicamo/gitea-list-pull-requests/commit/452312dd4aa264be06c3ed59e58de9143967f7fc))
 - prepare for v1 release
   ([537ad08](https://github.com/vicamo/gitea-list-pull-requests/commit/537ad08bbff09d95553efc2a9ad9de61a6972236))
