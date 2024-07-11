@@ -2,6 +2,36 @@
 
 # Changelog
 
+## [1.0.1](https://github.com/vicamo/gitea-list-pull-requests/compare/v1.0.0...v1.0.1) (2024-07-11)
+
+### 🐛 Bugfixes
+
+- move to googleapis/release-please-action
+  ([5dfc88b](https://github.com/vicamo/gitea-list-pull-requests/commit/5dfc88bdd19064c27137caf33e698552e534e2a0))
+- NATURAL_LANGUAGE linting error
+  ([6f3db03](https://github.com/vicamo/gitea-list-pull-requests/commit/6f3db03e9e11e4ba5b1f57672badce047480d4ac))
+
+### 🧰 Maintenance
+
+- **deps-dev:** bump eslint-plugin-jest from 27.9.0 to 28.2.0
+  ([ae263cf](https://github.com/vicamo/gitea-list-pull-requests/commit/ae263cff079cbcdce1f5736189d4a78ee3162e69))
+- **deps-dev:** bump eslint-plugin-jest from 27.9.0 to 28.2.0
+  ([2fa558b](https://github.com/vicamo/gitea-list-pull-requests/commit/2fa558b369f46b617b620aedf19f24d2606cf5ee))
+- **deps-dev:** bump the npm-development group across 1 directory with 3 updates
+  ([86662c6](https://github.com/vicamo/gitea-list-pull-requests/commit/86662c6df3b5e0371439e813e6c572912abc7304))
+- **deps-dev:** bump the npm-development group across 1 directory with 4 updates
+  ([92fb379](https://github.com/vicamo/gitea-list-pull-requests/commit/92fb37934dfe3bab34bbeee62fdc688b1ee0cc6b))
+- **deps-dev:** bump the npm-development group with 2 updates
+  ([887867f](https://github.com/vicamo/gitea-list-pull-requests/commit/887867fa06810c4b8bf51a061b57b0539202cf75))
+- **deps-dev:** bump the npm-development group with 5 updates
+  ([5fc6de3](https://github.com/vicamo/gitea-list-pull-requests/commit/5fc6de3b6855c8fa34eabfce54133f15cd503429))
+- **deps-dev:** bump the npm-development group with 5 updates
+  ([0b9cdb4](https://github.com/vicamo/gitea-list-pull-requests/commit/0b9cdb4ac9e256776d871532ab5fe4cf6b63624b))
+- **main:** merge
+  [vicamo/gitea-actions-template](https://github.com/vicamo/gitea-actions-template)
+  release 1.0.5
+  ([f426e3e](https://github.com/vicamo/gitea-list-pull-requests/commit/f426e3ee1eba9ce83262e424623840e6a1e59873))
+
 ## 1.0.0 (2024-04-04)
 
 ### 🚀 Features
