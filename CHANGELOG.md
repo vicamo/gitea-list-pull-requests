@@ -2,6 +2,13 @@
 
 # Changelog
 
+## [1.1.0](https://github.com/vicamo/gitea-actions-template/compare/v1.0.5...v1.1.0) (2024-09-18)
+
+### 🚀 Features
+
+- mark Node.js version bump
+  ([7bde762](https://github.com/vicamo/gitea-actions-template/commit/7bde762093087cc44cfa725cc87e99a919921e22))
+
 ## [1.0.5](https://github.com/vicamo/gitea-actions-template/compare/v1.0.4...v1.0.5) (2024-07-11)
 
 ### 🐛 Bugfixes
