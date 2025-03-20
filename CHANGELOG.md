@@ -2,6 +2,12 @@
 
 # Changelog
 
+## [1.1.1](https://github.com/vicamo/gitea-actions-template/compare/v1.1.0...v1.1.1) (2025-03-20)
+
+### 🧰 Maintenance
+
+- merge upstream HEAD
+
 ## [1.1.0](https://github.com/vicamo/gitea-actions-template/compare/v1.0.5...v1.1.0) (2024-09-18)
 
 ### 🚀 Features
