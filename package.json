@@ -1,7 +1,7 @@
 {
   "name": "gitea-list-pull-requests",
   "description": "Gitea action that lists pull requests with filtering conditions.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "You-Sheng Yang <vicamo@gmail.com>",
   "private": true,
   "homepage": "https://gitea.com/vicamo/gitea-list-pull-requests",
