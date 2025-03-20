@@ -1,11 +1,12 @@
 import * as core from '@actions/core'
-import * as ih from './input-helper'
-import * as imp from './implement'
+import * as ih from './input-helper.js'
+import * as imp from './implement.js'
 import * as gitea from 'gitea-js'
 
 /**
  * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
+ *
+ * @returns Resolves when the action is complete.
  */
 export async function run(): Promise<void> {
   try {

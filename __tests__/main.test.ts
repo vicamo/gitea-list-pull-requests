@@ -70,12 +70,11 @@ describe('run', () => {
 
   it('throw non-Error in getPullRequests', async () => {
     const inputSettings = u.buildInputSettings()
-    const _api = gitea.giteaApi(inputSettings.serverUrl, {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const api = gitea.giteaApi(inputSettings.serverUrl, {
       token: inputSettings.token
     })
-    type PRResponse = Awaited<
-      ReturnType<typeof _api.repos.repoListPullRequests>
-    >
+    type PRResponse = Awaited<ReturnType<typeof api.repos.repoListPullRequests>>
 
     getInputSettingsMock.mockImplementation(async () => inputSettings)
     getPullRequestsMock.mockImplementation(async () => {
