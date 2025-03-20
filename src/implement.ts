@@ -1,4 +1,4 @@
-import * as ih from './input-helper'
+import * as ih from './input-helper.js'
 import * as gitea from 'gitea-js'
 
 export async function getPullRequests(
@@ -25,7 +25,7 @@ export async function getPullRequests(
       `${inputSettings.repositoryName}`
     )
     if (resp.error) throw new Error(resp.error.message)
-    query.labels = inputSettings.labels.map(label => {
+    query.labels = inputSettings.labels.map((label) => {
       for (const result of resp.data) {
         if (result.name === label) return result.id as number
       }

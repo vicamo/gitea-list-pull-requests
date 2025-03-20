@@ -35,7 +35,7 @@ describe('get inputs', () => {
     const expectedOwner = 'a'
     const expectedName = 'b'
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'repository':
           return `${expectedOwner}/${expectedName}`
@@ -58,7 +58,7 @@ describe('get inputs', () => {
 
   it('test empty repository input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'repository':
           return ''
@@ -75,7 +75,7 @@ describe('get inputs', () => {
 
   it('test invalid repository input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'repository':
           return 'ab'
@@ -94,7 +94,7 @@ describe('get inputs', () => {
     const expectedUrl = 'url'
 
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'server_url':
           return expectedUrl
@@ -114,7 +114,7 @@ describe('get inputs', () => {
 
   it('test empty server_url input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'server_url':
           return ''
@@ -131,7 +131,7 @@ describe('get inputs', () => {
 
   it('test open state input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'state':
           return 'open'
@@ -149,7 +149,7 @@ describe('get inputs', () => {
 
   it('test closed state input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'state':
           return 'closed'
@@ -169,7 +169,7 @@ describe('get inputs', () => {
 
   it('test empty state input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'state':
           return ''
@@ -186,7 +186,7 @@ describe('get inputs', () => {
 
   it('test illegal state input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'state':
           return 'unexpected'
@@ -207,7 +207,7 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(u.getInputDefault)
     // Set the action's inputs as return values from core.getMultilineInput()
-    getMultilineInputMock.mockImplementation(name => {
+    getMultilineInputMock.mockImplementation((name) => {
       switch (name) {
         case 'labels':
           return [expectedLabel]
@@ -229,7 +229,7 @@ describe('get inputs', () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation(u.getInputDefault)
     // Set the action's inputs as return values from core.getMultilineInput()
-    getMultilineInputMock.mockImplementation(name => {
+    getMultilineInputMock.mockImplementation((name) => {
       switch (name) {
         case 'labels':
           return expectedLabels
@@ -247,7 +247,7 @@ describe('get inputs', () => {
 
   it('test page input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'page':
           return '123'
@@ -265,7 +265,7 @@ describe('get inputs', () => {
 
   it('test invalid page input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'page':
           return 'not a number'
@@ -282,7 +282,7 @@ describe('get inputs', () => {
 
   it('test limit input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'limit':
           return '123'
@@ -300,7 +300,7 @@ describe('get inputs', () => {
 
   it('test invalid limit input option', async () => {
     // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
+    getInputMock.mockImplementation((name) => {
       switch (name) {
         case 'limit':
           return 'not a number'

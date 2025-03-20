@@ -36,9 +36,10 @@ jobs:
         run: npm ci
 
       - name: Load super-linter configuration
-        run: cat .github/linters/super-linter.env >> "$GITHUB_ENV"
+        run: cat super-linter.env >> "$GITHUB_ENV"
       - name: Lint Codebase
         id: super-linter
         uses: super-linter/super-linter/slim@v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: ${{ github.workspace }}
